@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "stage": "press-release",
+  "dimensions": [
+    {
+      "id": "customer-definition",
+      "name": "Customer Definition",
+      "pass_criteria": "A specific named persona, role, segment, or job title is identified. The reader knows exactly who has this problem.",
+      "fail_criteria": "Customer is vague — 'users', 'teams', 'enterprises', 'people', 'customers' without further specification. A new team member couldn't describe the customer after reading this."
+    },
+    {
+      "id": "problem-evidence",
+      "name": "Problem Evidence",
+      "pass_criteria": "The problem is specific and evidenced — with a concrete pain, a current workaround, a frequency, a cost, or a quote. The reader understands why this matters now.",
+      "fail_criteria": "The problem is generic ('it's frustrating', 'it takes too long', 'there's no good solution') without specifics. No evidence that this is a real, acute pain."
+    },
+    {
+      "id": "customer-benefit",
+      "name": "Customer Benefit",
+      "pass_criteria": "The customer knows exactly what they get. The benefit is concrete, specific, and directly tied to the problem stated. The headline and solution paragraph agree.",
+      "fail_criteria": "The benefit is vague ('easier', 'faster', 'better') without saying what specifically changes for the customer. The customer can't tell what they actually receive."
+    },
+    {
+      "id": "spokesperson-quote",
+      "name": "Spokesperson Quote",
+      "pass_criteria": "The quote explains why this product matters — the insight, the mission, or the opportunity. It says something a real person would say.",
+      "fail_criteria": "The quote is generic marketing language ('We're excited to announce...', 'We're committed to helping customers succeed...'). It could be copy-pasted onto any product announcement."
+    },
+    {
+      "id": "customer-quote",
+      "name": "Customer Quote",
+      "pass_criteria": "The quote is specific and believable. It describes a real outcome or reaction in the customer's voice. Placeholder language is explicitly marked as [placeholder — replace with real customer quote].",
+      "fail_criteria": "The quote invents specific metrics or outcomes not grounded in PM-provided context without marking them as placeholders. Or the quote is generic praise ('This is amazing! It really helps us!')."
+    }
+  ]
+}

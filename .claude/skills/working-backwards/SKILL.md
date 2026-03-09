@@ -46,32 +46,25 @@ Generate a session ID from the current timestamp:
 echo "wb-$(date +%Y%m%d-%H%M%S)"
 ```
 
-Create the session directory and write `session.json` from the template:
-
-```bash
-mkdir -p working-backwards/{session-id}
-```
-
-Write `working-backwards/{session-id}/session.json` with these values filled in:
+Create the session directory and write `working-backwards/{session-id}/session.json` with:
 - `session_id`: the generated ID
-- `created_at` / `updated_at`: current ISO timestamp
+- `created_at` / `updated_at`: current ISO timestamp (`date -u +"%Y-%m-%dT%H:%M:%SZ"`)
 - `repo`: the repo from Step 1
 - `feature_idea`: the PM's input from `$ARGUMENTS`
 - `current_stage`: `"press-release"`
 - All stage `artifact_path` values: `"working-backwards/{session-id}/{artifact}.md"`
-- All other fields: as per the template defaults
+- All other fields: as per `templates/session.json.template`
 
-Commit to GitHub:
 ```bash
+mkdir -p working-backwards/{session-id}
 git add working-backwards/{session-id}/session.json
 git commit -m "Working Backwards [{session-id}]: session initialized"
 git push
 ```
 
-### Step 4a: Confirm and begin Stage 1
+### Step 4a: Show pipeline status and begin Stage 1
 
-Tell the PM:
-
+Display:
 ```
 Session {session-id} initialized and saved to GitHub.
 
@@ -84,19 +77,9 @@ Session {session-id} initialized and saved to GitHub.
     Stage 2: Internal FAQ         [ PENDING ]
     Stage 3: Requirements         [ PENDING ]
 ─────────────────────────────────────────
-
-Let's start with the Press Release.
-
-The Press Release is written as if the product has already shipped.
-It forces us to describe the product from the customer's perspective
-before writing a single requirement.
-
-To begin: tell me about the customer. Who specifically has this problem?
 ```
 
-Then hand off to the `press-release-writer` agent with the feature idea as context.
-
-*(Note: press-release-writer agent wired in Phase 2. In Phase 1, confirm session creation and stop here.)*
+Then proceed to **Stage 1: Press Release loop** below.
 
 ---
 
@@ -115,40 +98,124 @@ git fetch origin
 git diff HEAD origin/main -- working-backwards/{session-id}/session.json
 ```
 
-If there is a diff, warn the PM: "This session file has been edited directly in GitHub since your last interaction. Would you like to use the local version or the remote version?" Wait for their response before proceeding.
+If there is a diff, warn the PM and ask which version to use before proceeding.
 
-### Step 4b: Display state and resume at current stage
+### Step 4b: Resume at current stage
 
-Display the session status using the same format as wb-status, then resume at `current_stage`:
+Read `current_stage` from `session.json` and route accordingly:
 
-- If `current_stage` is `press-release` → hand off to `press-release-writer` with existing draft (if any) as context
-- If `current_stage` is `faq-external` → hand off to `faq-writer` in External mode with validated PR as context
-- If `current_stage` is `faq-internal` → hand off to `faq-writer` in Internal mode with validated PR + External FAQ as context
-- If `current_stage` is `requirements` → hand off to `requirements-writer` with full validated package as context
-- If all stages are `PASS` → display the complete package and confirm: "This Working Backwards session is complete. All outputs have been committed to GitHub."
-
-*(Note: agent handoffs wired in Phase 2. In Phase 1, display state and stop here.)*
+- `press-release` (status `in-progress`) → **Stage 1: Press Release loop**, passing any existing draft as context
+- `faq-external` → **Stage 2: FAQ loop** in External mode *(Phase 3)*
+- `faq-internal` → **Stage 2: FAQ loop** in Internal mode *(Phase 3)*
+- `requirements` → **Stage 3: Requirements loop** *(Phase 4)*
+- All stages `PASS` → display complete package, confirm session is finished
 
 ---
 
-## Stage-gate rule (enforce at every stage transition)
+## Stage 1: Press Release loop
+
+### Invoke the Press Release Writer
+
+Use the Agent tool to delegate to the `press-release-writer` agent. Pass:
+- The feature idea
+- The existing draft (if resuming — read from `working-backwards/{session-id}/press-release.md` if it exists)
+- Any prior Critic feedback (if this is a revision cycle)
+
+The agent will ask the PM clarifying questions and return a Press Release draft.
+
+### Invoke the Critic
+
+Once the `press-release-writer` returns a draft, use the Agent tool to delegate to the `critic` agent. Pass:
+- The full draft text
+- Rubric path: `.claude/rubrics/stage-1-press-release.json`
+- Which dimensions already passed (if this is revision cycle 2 or 3)
+
+The Critic returns a structured verdict.
+
+### Branch on verdict
+
+**If `VERDICT: PASS`:**
+
+1. Write the artifact:
+   - Write the draft to `working-backwards/{session-id}/press-release.md`
+2. Update `session.json`:
+   - `stages.press-release.status` → `"complete"`
+   - `stages.press-release.critic_verdict` → `"PASS"`
+   - `current_stage` → `"faq-external"`
+   - `updated_at` → current timestamp
+3. Commit both files:
+   ```bash
+   git add working-backwards/{session-id}/press-release.md working-backwards/{session-id}/session.json
+   git commit -m "Working Backwards [{session-id}]: Stage 1 Press Release - Critic PASS"
+   git push
+   ```
+4. Display to the PM:
+   ```
+   ─────────────────────────────────────────
+     ✓ Stage 1: Press Release        [ PASS ]
+     ▶ Stage 2: External FAQ         [ IN PROGRESS ]
+       Stage 2: Internal FAQ         [ PENDING ]
+       Stage 3: Requirements         [ PENDING ]
+   ─────────────────────────────────────────
+   Press Release committed to GitHub.
+   Moving to Stage 2: External FAQ.
+   ```
+5. *(Phase 3 wires in Stage 2 here)*
+
+**If `VERDICT: NEEDS REVISION`:**
+
+1. Read `revision_count` from `session.json` for the `press-release` stage
+2. If `revision_count < 3`:
+   - Increment `revision_count` in `session.json`, update `updated_at`
+   - Commit updated `session.json`:
+     ```bash
+     git add working-backwards/{session-id}/session.json
+     git commit -m "Working Backwards [{session-id}]: Stage 1 revision {n}"
+     git push
+     ```
+   - Show the PM the Critic's feedback clearly:
+     ```
+     The Critic reviewed your Press Release and found issues to address:
+
+     [For each failing dimension:]
+     ❌ {Dimension Name}
+        Issue: {specific issue}
+        Fix:   {concrete suggested revision}
+     ```
+   - Return to **Invoke the Press Release Writer** with the current draft + Critic feedback
+3. If `revision_count >= 3`:
+   - Do not loop again
+   - Write the best available draft to `working-backwards/{session-id}/press-release.md`
+   - Update `session.json` (`updated_at`, save revision count)
+   - Commit:
+     ```bash
+     git add working-backwards/{session-id}/press-release.md working-backwards/{session-id}/session.json
+     git commit -m "Working Backwards [{session-id}]: Stage 1 - max revisions reached, draft saved"
+     git push
+     ```
+   - Tell the PM:
+     ```
+     After 3 revision cycles, the Press Release hasn't passed all Critic checks.
+     The current draft has been saved to GitHub.
+
+     Unresolved issues:
+     [list remaining failing dimensions and their feedback]
+
+     This usually means the product idea needs more customer research before
+     a Working Backwards process can succeed. Consider:
+     - Talking to 2-3 customers to get specific evidence for the problem
+     - Narrowing the customer definition further
+     - Revisiting whether this is the right problem to solve
+
+     Run `/working-backwards resume {session-id}` when you're ready to try again.
+     ```
+
+---
+
+## Stage-gate rule (enforce always)
 
 If the PM asks to skip a stage or jump ahead:
 
-> "The [requested stage] stage is locked until [prerequisite stage(s)] pass the Critic review. You are currently at [current stage]. Working Backwards requires completing each stage in order — this is what makes the methodology work."
+> "The [requested stage] is locked until [prerequisite stage(s)] pass the Critic review. You are currently at [current stage]. Working Backwards requires completing each stage in order — this is what makes the methodology work."
 
 Do not route around the pipeline under any circumstances.
-
----
-
-## After each Critic PASS (wired in Phase 2+)
-
-1. Write the artifact to `working-backwards/{session-id}/{artifact}.md`
-2. Update `session.json`: set stage `status` to `"complete"`, record `critic_verdict: "PASS"`, advance `current_stage`
-3. Commit both files:
-   ```bash
-   git add working-backwards/{session-id}/{artifact}.md working-backwards/{session-id}/session.json
-   git commit -m "Working Backwards [{session-id}]: {Stage Name} - Critic PASS"
-   git push
-   ```
-4. Display updated pipeline status and proceed to next stage
