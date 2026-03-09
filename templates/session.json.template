@@ -1,0 +1,35 @@
+{
+  "session_id": "",
+  "created_at": "",
+  "updated_at": "",
+  "repo": "",
+  "feature_idea": "",
+  "current_stage": "press-release",
+  "stages": {
+    "press-release": {
+      "status": "in-progress",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": ""
+    },
+    "faq-external": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": ""
+    },
+    "faq-internal": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": ""
+    },
+    "requirements": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": ""
+    }
+  },
+  "invocation_log": []
+}
