@@ -304,8 +304,8 @@ The rubrics used by the Critic must be stored as versioned, configurable structu
 - **Model:** Built on Claude via the Anthropic SDK; `claude-opus-4-6` for Critic and Orchestrator, `claude-sonnet-4-6` acceptable for worker agents
 - **Agent communication:** Structured message passing between agents (not raw text); each message includes: stage identifier, prior stage outputs, current artifact, and Critic review history
 - **Session context:** Full prior-stage outputs must be available to every downstream agent — the Requirements Agent must have the complete PR and FAQ when generating requirements
-- **Persistence:** Every stage output (PR draft, FAQ, Requirements) must be committed to the configured GitHub repository after each Critic PASS. Session state (current stage, revision history, Critic verdicts) must be stored in a `session.json` file in the same repo. A PM must be able to close and resume a session with no loss of progress.
-- **GitHub integration:** The system requires a configured GitHub repo and token at session start. It uses the GitHub API to read, write, and commit files. It must not buffer stage outputs in memory only — each PASS triggers an immediate commit.
+- **Persistence:** Every stage output (PR draft, FAQ, Requirements) must be committed to the configured GitHub repository after each Critic PASS using standard `git` commands. Session state (current stage, revision history, Critic verdicts) must be stored in a `session.json` file in the same repo. A PM must be able to close and resume a session with no loss of progress.
+- **GitHub tooling:** All GitHub operations use the `gh` CLI and standard `git` commands — no MCP server required. Prerequisite: `gh` CLI installed and authenticated (`brew install gh && gh auth login`). The system must verify `gh` is authenticated before starting a session.
 - **Observability:** Each agent invocation logged with: agent name, stage, input/output token counts, latency, Critic pass/fail, and revision cycle count
 - **API key management:** User-provided Anthropic API key; not stored beyond the session
 - **Rate limiting:** Anthropic API rate limit errors must surface a user-facing message with a suggested retry time — no silent failures
@@ -314,10 +314,10 @@ The rubrics used by the Critic must be stored as versioned, configurable structu
 
 ## Technical Context
 
-- Built on the Anthropic SDK (Python or TypeScript) using multi-agent orchestration
-- Claude tool use and structured outputs should be used for Critic rubric evaluation — not freeform prose — to produce consistent, parseable verdicts
-- Stage outputs (PR, FAQ, Requirements) are stored as structured objects in session state and committed to GitHub as markdown files after each PASS — not raw strings passed between agents in memory only
-- The stage-gate logic lives in the Orchestrator, not in the individual agents — agents produce and revise; the Orchestrator controls flow
+- Built as Claude Code extensions: slash commands for the Orchestrator, subagents for each worker and the Critic
+- All GitHub operations use `gh` CLI and `git` — no MCP server. A `skills/github-operations/SKILL.md` file provides shared instructions for all agents: *"Use `gh` CLI and standard git commands for all GitHub operations. Use `git add/commit/push` to persist stage outputs. Use `gh api repos/{owner}/{repo}/contents/{path}` to read files outside a working directory."*
+- Stage outputs (PR, FAQ, Requirements) are written to disk and committed to GitHub as markdown files after each PASS — not buffered in memory only
+- The stage-gate logic lives in the Orchestrator command, not in the individual agents — agents produce and revise; the Orchestrator controls flow
 - Session state is stored as `session.json` in the GitHub repo alongside the artifact files; it records: current stage, revision counts per stage, Critic verdicts, and `[OPEN]` item count per stage
 - Suggested repo structure per Working Backwards session:
   ```
@@ -329,8 +329,8 @@ The rubrics used by the Critic must be stored as versioned, configurable structu
       requirements.md         ← committed on Stage 3 PASS
       session.json            ← updated after every agent interaction
   ```
-- The GitHub MCP server (or GitHub REST API) should be used for all repo operations — reading, writing, and committing files
 - [RESOLVED 2026-03-08] Orchestrator routing: explicit state machine over model-based classifier. A fixed pipeline with known stages maps cleanly to a state machine — simpler, more predictable, easier to debug.
+- [RESOLVED 2026-03-08] GitHub integration: `gh` CLI + `git` over GitHub MCP server. Simpler setup, transparent operations, no additional configuration required beyond `gh auth login`.
 
 ---
 
