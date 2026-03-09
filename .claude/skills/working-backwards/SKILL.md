@@ -160,7 +160,7 @@ The Critic returns a structured verdict.
    Press Release committed to GitHub.
    Moving to Stage 2: External FAQ.
    ```
-5. *(Phase 3 wires in Stage 2 here)*
+5. Proceed to **Stage 2: External FAQ loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -209,6 +209,137 @@ The Critic returns a structured verdict.
 
      Run `/working-backwards resume {session-id}` when you're ready to try again.
      ```
+
+---
+
+---
+
+## Stage 2: External FAQ loop
+
+### Invoke the FAQ Writer (External mode)
+
+Use the Agent tool to delegate to the `faq-writer` agent. Pass:
+- Mode: `EXTERNAL`
+- The validated Press Release (read from `working-backwards/{session-id}/press-release.md`)
+- Any existing External FAQ draft + Critic feedback (if this is a revision cycle)
+
+The agent generates 5–8 hard customer questions, drafts answers, and returns the FAQ.
+
+### Invoke the Critic
+
+Use the Agent tool to delegate to the `critic` agent. Pass:
+- The full External FAQ text
+- Rubric path: `.claude/rubrics/stage-2-external-faq.json`
+- Which dimensions already passed (if revision cycle 2 or 3)
+
+### Branch on verdict
+
+**If `VERDICT: PASS`:**
+
+1. Write the artifact to `working-backwards/{session-id}/faq-external.md`
+2. Update `session.json`:
+   - `stages.faq-external.status` → `"complete"`
+   - `stages.faq-external.critic_verdict` → `"PASS"`
+   - `current_stage` → `"faq-internal"`
+   - `updated_at` → current timestamp
+3. Commit:
+   ```bash
+   git add working-backwards/{session-id}/faq-external.md working-backwards/{session-id}/session.json
+   git commit -m "Working Backwards [{session-id}]: Stage 2 External FAQ - Critic PASS"
+   git push
+   ```
+4. Display:
+   ```
+   ─────────────────────────────────────────
+     ✓ Stage 1: Press Release        [ PASS ]
+     ✓ Stage 2: External FAQ         [ PASS ]
+     ▶ Stage 2: Internal FAQ         [ IN PROGRESS ]
+       Stage 3: Requirements         [ PENDING ]
+   ─────────────────────────────────────────
+   External FAQ committed to GitHub.
+   Moving to Stage 2: Internal FAQ.
+   ```
+5. Proceed to **Stage 2: Internal FAQ loop** below.
+
+**If `VERDICT: NEEDS REVISION`:**
+
+1. Read `revision_count` from `session.json` for `faq-external`
+2. If `revision_count < 3`:
+   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Show the PM the Critic's feedback:
+     ```
+     The Critic reviewed the External FAQ and found issues to address:
+
+     [For each failing dimension:]
+     ❌ {Dimension Name}
+        Issue: {specific issue}
+        Fix:   {concrete suggested revision}
+     ```
+   - Return to **Invoke the FAQ Writer (External mode)** with current draft + feedback
+3. If `revision_count >= 3`:
+   - Save best draft to `working-backwards/{session-id}/faq-external.md`, commit, push
+   - Tell the PM what's unresolved and suggest gathering more customer evidence before resuming
+
+---
+
+## Stage 2: Internal FAQ loop
+
+### Invoke the FAQ Writer (Internal mode)
+
+Use the Agent tool to delegate to the `faq-writer` agent. Pass:
+- Mode: `INTERNAL`
+- The validated Press Release (read from `working-backwards/{session-id}/press-release.md`)
+- The validated External FAQ (read from `working-backwards/{session-id}/faq-external.md`)
+- Any existing Internal FAQ draft + Critic feedback (if this is a revision cycle)
+
+The agent generates 5–8 hard engineering/leadership questions, drafts answers, flags blockers, and returns the FAQ.
+
+### Invoke the Critic
+
+Use the Agent tool to delegate to the `critic` agent. Pass:
+- The full Internal FAQ text
+- Rubric path: `.claude/rubrics/stage-2-internal-faq.json`
+- Which dimensions already passed (if revision cycle 2 or 3)
+
+### Branch on verdict
+
+**If `VERDICT: PASS`:**
+
+1. Write the artifact to `working-backwards/{session-id}/faq-internal.md`
+2. Update `session.json`:
+   - `stages.faq-internal.status` → `"complete"`
+   - `stages.faq-internal.critic_verdict` → `"PASS"`
+   - `current_stage` → `"requirements"`
+   - `updated_at` → current timestamp
+3. Commit:
+   ```bash
+   git add working-backwards/{session-id}/faq-internal.md working-backwards/{session-id}/session.json
+   git commit -m "Working Backwards [{session-id}]: Stage 2 Internal FAQ - Critic PASS"
+   git push
+   ```
+4. Display:
+   ```
+   ─────────────────────────────────────────
+     ✓ Stage 1: Press Release        [ PASS ]
+     ✓ Stage 2: External FAQ         [ PASS ]
+     ✓ Stage 2: Internal FAQ         [ PASS ]
+     ▶ Stage 3: Requirements         [ IN PROGRESS ]
+   ─────────────────────────────────────────
+   Internal FAQ committed to GitHub.
+   Moving to Stage 3: Requirements.
+   ```
+5. *(Phase 4 wires in Stage 3 here)*
+
+**If `VERDICT: NEEDS REVISION`:**
+
+1. Read `revision_count` from `session.json` for `faq-internal`
+2. If `revision_count < 3`:
+   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Show the PM the Critic's feedback per failing dimension
+   - Return to **Invoke the FAQ Writer (Internal mode)** with current draft + feedback
+3. If `revision_count >= 3`:
+   - Save best draft to `working-backwards/{session-id}/faq-internal.md`, commit, push
+   - Tell the PM what's unresolved (typically: missing stakeholder coverage or unowned open items) and suggest resolving blockers with the relevant team before resuming
 
 ---
 

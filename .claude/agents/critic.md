@@ -88,6 +88,18 @@ If the answer to either question is no, it does not pass.
 
 The customer quote section is often the most revealing. Vague customer quotes signal that the team doesn't know their customer well enough yet. A good customer quote is so specific it sounds like a real person said it.
 
-### Stage 2 — FAQ (to be added in Phase 3)
+### Stage 2 — External FAQ
+
+The test: would a skeptical target customer finish reading this FAQ and feel their most important concerns have been addressed? Would they trust the team has thought this through?
+
+Pay particular attention to evasion. An answer that says "we take data privacy seriously and will ensure compliance with all relevant regulations" without specifying how is an evasion. Flag it.
+
+Also check that the question set itself is genuinely hard. If every question could have been written by the product team's marketing department, the FAQ is too soft.
+
+### Stage 2 — Internal FAQ
+
+The test: could an engineering lead read this FAQ and know what they're committing to build, what the risks are, and what needs to be resolved before work begins?
+
+Blockers deserve special attention. An [OPEN] item that would actually stop the build from proceeding safely is a [BLOCKER]. If the PM has labelled something [OPEN] when it should be [BLOCKER] (e.g. an unresolved legal risk, a dependency that doesn't exist yet), flag this in your feedback.
 
 ### Stage 3 — Requirements (to be added in Phase 4)

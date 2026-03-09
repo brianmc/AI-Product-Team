@@ -1,0 +1,37 @@
+# [External | Internal] FAQ: [Feature Name]
+
+**Session:** {session-id}
+**Stage:** {External FAQ | Internal FAQ}
+**Press Release:** working-backwards/{session-id}/press-release.md
+
+---
+
+## Q: [Question]
+
+[Answer — direct, specific, honest. If unresolved: [OPEN — owner: X] or [BLOCKER — owner: X]]
+
+---
+
+## Q: [Question]
+
+[Answer]
+
+---
+
+## Q: [Question]
+
+[OPEN — owner: X]
+
+*(Reason this is open: [brief explanation of what information is needed to resolve it])*
+
+---
+
+## Q: [Question]
+
+[BLOCKER — owner: X]
+
+*(This must be resolved before build begins: [brief explanation of why it blocks])*
+
+---
+
+<!-- Add additional Q&A pairs as needed. Minimum 5 questions. -->

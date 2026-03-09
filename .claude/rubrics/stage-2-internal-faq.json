@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "stage": "faq-internal",
+  "dimensions": [
+    {
+      "id": "coverage",
+      "name": "Stakeholder Coverage",
+      "pass_criteria": "The FAQ includes hard questions from at least three stakeholder perspectives: engineering (feasibility, scale, dependencies), business/leadership (why now, why us, success metrics, business model), and legal/compliance (if applicable to the domain). A stakeholder from each group would feel their concerns were taken seriously.",
+      "fail_criteria": "One or more stakeholder perspectives are entirely absent or represented only by softball questions. Engineering questions that only cover happy-path implementation are insufficient — risk and failure modes must be covered."
+    },
+    {
+      "id": "answer-completeness",
+      "name": "Answer Completeness",
+      "pass_criteria": "Every question has either a substantive answer or is explicitly marked [OPEN — owner: X] with a named owner. Open items are genuinely open — not avoidance of a question that has an answer.",
+      "fail_criteria": "One or more questions are unanswered without [OPEN] marking. Or [OPEN] items have no named owner (just 'TBD', 'the team', or blank)."
+    },
+    {
+      "id": "blocker-flagging",
+      "name": "Blocker Identification",
+      "pass_criteria": "Any open item that would prevent the build from proceeding — legal risk, missing capability, unresolved dependency, compliance requirement — is flagged as [BLOCKER — owner: X]. The engineering team can read this FAQ and know exactly what must be resolved before work begins.",
+      "fail_criteria": "Build-blocking issues are buried in [OPEN] items without distinction, or are not surfaced at all. The engineering team would have to infer blockers rather than having them made explicit."
+    },
+    {
+      "id": "evasion",
+      "name": "No Evasive Answers",
+      "pass_criteria": "Answers to hard questions are direct. When the answer is 'we don't know yet', it is marked [OPEN] rather than dressed up with confident-sounding language that obscures the uncertainty.",
+      "fail_criteria": "Hard questions (e.g. 'What's the business model?', 'What are the legal risks?') receive vague, aspirational, or deflecting answers rather than honest responses or [OPEN] flags."
+    }
+  ]
+}

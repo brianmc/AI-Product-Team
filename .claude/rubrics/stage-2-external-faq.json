@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "stage": "faq-external",
+  "dimensions": [
+    {
+      "id": "question-quality",
+      "name": "Question Quality",
+      "pass_criteria": "Every question represents a genuine challenge a skeptical customer would raise — about risk, cost, workflow change, data, competition, or failure modes. A new PM could not have predicted all of them easily.",
+      "fail_criteria": "Questions are softballs ('How do I get started?', 'What are the benefits?') or leading questions that assume a positive answer. The set feels like a FAQ written by the marketing team, not a skeptical customer."
+    },
+    {
+      "id": "answer-completeness",
+      "name": "Answer Completeness",
+      "pass_criteria": "Every question has either a substantive answer or is explicitly marked [OPEN — owner: X] with a named owner. No question is left unanswered without acknowledgment.",
+      "fail_criteria": "One or more questions have no answer and are not marked [OPEN]. Or questions are marked [OPEN] without a named owner (e.g. just 'TBD' or blank)."
+    },
+    {
+      "id": "evasion",
+      "name": "No Evasive Answers",
+      "pass_criteria": "Each answer directly resolves the question asked. Answers that reveal genuine uncertainty are marked [OPEN] rather than dressed up as answers.",
+      "fail_criteria": "One or more answers restate the question without resolving it, deflect to vague future plans ('We will address this later'), or use marketing language to avoid a hard truth."
+    },
+    {
+      "id": "coverage",
+      "name": "Coverage of Critical Concerns",
+      "pass_criteria": "The FAQ covers the customer concerns most likely to block adoption: data/privacy, workflow change, cost/value, failure modes, and differentiation from alternatives. A customer finishing this FAQ should have their most important concerns addressed.",
+      "fail_criteria": "The FAQ is missing one or more critical concern categories that a reasonable customer in the target segment would raise. The omission feels intentional rather than accidental."
+    }
+  ]
+}
