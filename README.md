@@ -36,12 +36,21 @@ All outputs are committed to GitHub after each stage passes — giving you a com
 
 ## Setup
 
-### 1. Clone this repo
+### 1. Get the repo
 
+**Option A — Clone (recommended):**
 ```bash
 git clone git@github.com:brianmc/AI-Product-Team.git
 cd AI-Product-Team
 ```
+
+**Option B — Download ZIP (if git clone is blocked by a corporate firewall):**
+1. Go to `https://github.com/brianmc/AI-Product-Team`
+2. Click **Code → Download ZIP**
+3. Unzip and move the folder to where you want to work from
+4. Open a terminal in the unzipped folder
+
+> Note: If you download via ZIP instead of cloning, GitHub persistence (`--repo`) will not be available. Sessions will be saved locally only.
 
 ### 2. Open Claude Code in this directory
 
