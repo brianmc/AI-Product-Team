@@ -1,6 +1,6 @@
 ---
 name: working-backwards
-description: Start or resume an Amazon Working Backwards session. Guides the PM through Press Release → External FAQ → Internal FAQ → Visual Demo → Documentation → Requirements, with a Critic review at each stage. All outputs are committed to GitHub.
+description: Start or resume an Amazon Working Backwards session. Guides the PM through Press Release → External FAQ → Internal FAQ → Visual Demo → Documentation → Telemetry → Requirements, with a Critic review at each stage. All outputs are committed to GitHub.
 argument-hint: "[feature idea] | resume [session-id]"
 allowed-tools: Bash, Read, Write
 skills:
@@ -77,7 +77,8 @@ Session {session-id} initialized and saved to GitHub.
     Stage 2: Internal FAQ         [ PENDING ]
     Stage 3: Visual Demo          [ PENDING ]
     Stage 4: Documentation        [ PENDING ]
-    Stage 5: Requirements         [ PENDING ]
+    Stage 5: Telemetry            [ PENDING ]
+    Stage 6: Requirements         [ PENDING ]
 ─────────────────────────────────────────
 ```
 
@@ -111,7 +112,8 @@ Read `current_stage` from `session.json` and route accordingly:
 - `faq-internal` → **Stage 2: Internal FAQ loop**
 - `demo` → **Stage 3: Visual Demo loop**
 - `docs` → **Stage 4: Documentation loop**
-- `requirements` → **Stage 5: Requirements loop**
+- `telemetry` → **Stage 5: Telemetry loop**
+- `requirements` → **Stage 6: Requirements loop**
 - All stages `PASS` → display complete package, confirm session is finished
 
 ---
@@ -159,7 +161,10 @@ The Critic returns a structured verdict.
      ✓ Stage 1: Press Release        [ PASS ]
      ▶ Stage 2: External FAQ         [ IN PROGRESS ]
        Stage 2: Internal FAQ         [ PENDING ]
-       Stage 3: Requirements         [ PENDING ]
+       Stage 3: Visual Demo          [ PENDING ]
+       Stage 4: Documentation        [ PENDING ]
+       Stage 5: Telemetry            [ PENDING ]
+       Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
    Press Release committed to GitHub.
    Moving to Stage 2: External FAQ.
@@ -258,7 +263,10 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
      ✓ Stage 1: Press Release        [ PASS ]
      ✓ Stage 2: External FAQ         [ PASS ]
      ▶ Stage 2: Internal FAQ         [ IN PROGRESS ]
-       Stage 3: Requirements         [ PENDING ]
+       Stage 3: Visual Demo          [ PENDING ]
+       Stage 4: Documentation        [ PENDING ]
+       Stage 5: Telemetry            [ PENDING ]
+       Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
    External FAQ committed to GitHub.
    Moving to Stage 2: Internal FAQ.
@@ -327,10 +335,13 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
      ✓ Stage 1: Press Release        [ PASS ]
      ✓ Stage 2: External FAQ         [ PASS ]
      ✓ Stage 2: Internal FAQ         [ PASS ]
-     ▶ Stage 3: Requirements         [ IN PROGRESS ]
+     ▶ Stage 3: Visual Demo          [ IN PROGRESS ]
+       Stage 4: Documentation        [ PENDING ]
+       Stage 5: Telemetry            [ PENDING ]
+       Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
    Internal FAQ committed to GitHub.
-   Moving to Stage 3: Requirements.
+   Moving to Stage 3: Visual Demo.
    ```
 5. Proceed to **Stage 3: Visual Demo loop** below.
 
@@ -394,7 +405,8 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
      ✓ Stage 2: Internal FAQ         [ PASS ]
      ✓ Stage 3: Visual Demo          [ PASS ]
      ▶ Stage 4: Documentation        [ IN PROGRESS ]
-       Stage 5: Requirements         [ PENDING ]
+       Stage 5: Telemetry            [ PENDING ]
+       Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
    Demo committed to GitHub.
 
@@ -462,7 +474,7 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
 1. Update `session.json`:
    - `stages.docs.status` → `"complete"`
    - `stages.docs.critic_verdict` → `"PASS"`
-   - `current_stage` → `"requirements"`
+   - `current_stage` → `"telemetry"`
    - `updated_at` → current timestamp
 2. Commit the entire docs directory and updated session.json:
    ```bash
@@ -478,12 +490,13 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
      ✓ Stage 2: Internal FAQ         [ PASS ]
      ✓ Stage 3: Visual Demo          [ PASS ]
      ✓ Stage 4: Documentation        [ PASS ]
-     ▶ Stage 5: Requirements         [ IN PROGRESS ]
+     ▶ Stage 5: Telemetry            [ IN PROGRESS ]
+       Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
    Documentation committed to GitHub.
-   Moving to Stage 5: Requirements — the final stage.
+   Moving to Stage 5: Telemetry.
    ```
-4. Proceed to **Stage 5: Requirements loop** below.
+4. Proceed to **Stage 5: Telemetry loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -501,7 +514,84 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
 
 ---
 
-## Stage 5: Requirements loop
+## Stage 5: Telemetry loop
+
+### Invoke the Telemetry Writer
+
+Use the Agent tool to delegate to the `telemetry-writer` agent. Pass:
+- The session ID and session directory path
+- Paths to all validated artifacts:
+  - `working-backwards/{session-id}/press-release.md`
+  - `working-backwards/{session-id}/faq-external.md`
+  - `working-backwards/{session-id}/faq-internal.md`
+  - `working-backwards/{session-id}/docs/`
+
+The telemetry-writer will ask the PM clarifying questions (north star confirmation, activation event, compliance constraints, analytics infrastructure), confirm the plan, then generate `working-backwards/{session-id}/telemetry.md`.
+
+### Invoke the Critic
+
+Once the `telemetry-writer` returns, use the Agent tool to delegate to the `critic` agent. Pass:
+- The full telemetry spec text
+- Rubric path: `.claude/rubrics/stage-5-telemetry.json`
+- The Press Release for outcome coverage evaluation: `working-backwards/{session-id}/press-release.md`
+- Which dimensions already passed (if revision cycle 2 or 3)
+
+### Branch on verdict
+
+**If `VERDICT: PASS`:**
+
+1. Update `session.json`:
+   - `stages.telemetry.status` → `"complete"`
+   - `stages.telemetry.critic_verdict` → `"PASS"`
+   - `current_stage` → `"requirements"`
+   - `updated_at` → current timestamp
+2. Commit the telemetry spec and updated session.json:
+   ```bash
+   git add working-backwards/{session-id}/telemetry.md working-backwards/{session-id}/session.json
+   git commit -m "Working Backwards [{session-id}]: Stage 5 Telemetry - Critic PASS"
+   git push
+   ```
+3. Display:
+   ```
+   ─────────────────────────────────────────
+     ✓ Stage 1: Press Release        [ PASS ]
+     ✓ Stage 2: External FAQ         [ PASS ]
+     ✓ Stage 2: Internal FAQ         [ PASS ]
+     ✓ Stage 3: Visual Demo          [ PASS ]
+     ✓ Stage 4: Documentation        [ PASS ]
+     ✓ Stage 5: Telemetry            [ PASS ]
+     ▶ Stage 6: Requirements         [ IN PROGRESS ]
+   ─────────────────────────────────────────
+   Telemetry spec committed to GitHub.
+   Moving to Stage 6: Requirements — the final stage.
+   ```
+4. Proceed to **Stage 6: Requirements loop** below.
+
+**If `VERDICT: NEEDS REVISION`:**
+
+1. Read `revision_count` from `session.json` for `telemetry`
+2. If `revision_count < 3`:
+   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Show the PM the Critic's feedback per failing dimension:
+     ```
+     The Critic reviewed the telemetry spec and found issues to address:
+
+     [For each failing dimension:]
+     ❌ {Dimension Name}
+        Issue: {specific issue}
+        Fix:   {concrete suggested revision}
+     ```
+   - Return to **Invoke the Telemetry Writer** with the current draft + Critic feedback
+   - The telemetry-writer fixes only the failing dimensions — it does not rewrite from scratch
+3. If `revision_count >= 3`:
+   - Commit whatever exists as `telemetry.md`, push
+   - Tell the PM which dimensions remain unresolved. Most common: metrics not tied to PR outcomes, missing instrumentation requirements, or vague activation event definition
+
+---
+
+---
+
+## Stage 6: Requirements loop
 
 ### Invoke the Requirements Writer
 
@@ -511,6 +601,7 @@ Use the Agent tool to delegate to the `requirements-writer` agent. Pass:
   - `working-backwards/{session-id}/press-release.md`
   - `working-backwards/{session-id}/faq-external.md`
   - `working-backwards/{session-id}/faq-internal.md`
+  - `working-backwards/{session-id}/telemetry.md`
 
 The requirements-writer will ask the PM clarifying questions, confirm the requirements structure, then generate `working-backwards/{session-id}/requirements.md`.
 
@@ -535,7 +626,7 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
 2. Commit the requirements and updated session.json:
    ```bash
    git add working-backwards/{session-id}/requirements.md working-backwards/{session-id}/session.json
-   git commit -m "Working Backwards [{session-id}]: Stage 5 Requirements - Critic PASS"
+   git commit -m "Working Backwards [{session-id}]: Stage 6 Requirements - Critic PASS"
    git push
    ```
 3. Display the complete package:
@@ -546,7 +637,8 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
      ✓ Stage 2: Internal FAQ         [ PASS ]
      ✓ Stage 3: Visual Demo          [ PASS ]
      ✓ Stage 4: Documentation        [ PASS ]
-     ✓ Stage 5: Requirements         [ PASS ]
+     ✓ Stage 5: Telemetry            [ PASS ]
+     ✓ Stage 6: Requirements         [ PASS ]
    ─────────────────────────────────────────
    Working Backwards session complete.
    All artifacts committed to GitHub.
@@ -557,6 +649,7 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
      ✓ faq-internal.md       — engineering & leadership Q&A
      ✓ demo/                 — working prototype (npm install && npm start)
      ✓ docs/                 — user-facing documentation
+     ✓ telemetry.md          — measurement & instrumentation spec
      ✓ requirements.md       — engineer-ready requirements
 
    [If any [OPEN] or [BLOCKER] items were surfaced in requirements.md, list them here so the PM sees them before closing the session.]

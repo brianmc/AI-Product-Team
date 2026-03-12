@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "stage": "telemetry",
+  "dimensions": [
+    {
+      "id": "outcome-coverage",
+      "name": "Outcome Coverage",
+      "pass_criteria": "Every success criterion stated or implied in the Press Release has at least one metric that will validate it. A PM could read the Press Release and the telemetry spec side by side and trace each promised outcome to a measurement. The north star metric is clearly defined and linked to the core customer benefit.",
+      "fail_criteria": "One or more Press Release success criteria have no corresponding metric. The telemetry spec measures activity (page views, API calls) without connecting those signals to the outcomes the PR promised. The north star metric is absent or is a generic proxy with no connection to the specific product."
+    },
+    {
+      "id": "adoption-and-non-adoption",
+      "name": "Adoption and Non-Adoption Coverage",
+      "pass_criteria": "The spec explicitly addresses both who is using the product (adoption) and who is not and why (non-adoption). Non-adoption metrics identify specific drop-off points in the user journey with investigation triggers — not just an aggregate 'inactive users' count. The spec treats non-adoption as a diagnostic tool, not a lagging indicator.",
+      "fail_criteria": "The spec covers adoption but treats non-adoption as a residual (e.g., 'users who didn't return'). There are no specific drop-off points identified, no investigation triggers defined, and no mechanism for understanding why users are not engaging."
+    },
+    {
+      "id": "time-to-value",
+      "name": "Time-to-Value Measurement",
+      "pass_criteria": "The spec defines a specific, observable activation event derived from the documented user journey — the moment a user has accomplished the core task for the first time. Time-to-activation is measured with a concrete event sequence. The activation event is precise enough to implement (not 'user engages with the product' but 'user completes [specific action]').",
+      "fail_criteria": "The activation event is absent, vague, or unmeasurable (e.g., 'when the user understands the product'). Time-to-value is described conceptually but no concrete event or measurement mechanism is specified."
+    },
+    {
+      "id": "customer-delight",
+      "name": "Customer Delight Measurement",
+      "pass_criteria": "The spec includes at least one satisfaction signal (NPS, CSAT, qualitative feedback, or equivalent) with a specific trigger condition — when in the user journey it fires, and how. Retention or return rate is defined with a concrete definition of what 'return' means for this product.",
+      "fail_criteria": "Customer delight is absent or addressed only with a vague placeholder ('we will collect NPS'). No trigger condition is defined for when the satisfaction signal fires. Retention is not addressed."
+    },
+    {
+      "id": "practical-implementability",
+      "name": "Practical Implementability",
+      "pass_criteria": "Every metric has a concrete measurement mechanism — a named event, a defined query, a specific survey trigger condition. The spec includes an Instrumentation Requirements section listing what events must be built. An engineer could read the spec and know exactly what to instrument without a follow-up conversation.",
+      "fail_criteria": "Metrics are described at an aspirational level with no implementation path. Events are not named. The Instrumentation Requirements section is absent or too vague to act on. A reader cannot determine what to build from this spec."
+    }
+  ]
+}

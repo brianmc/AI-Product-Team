@@ -36,6 +36,12 @@
       "revision_count": 0,
       "artifact_path": ""
     },
+    "telemetry": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": ""
+    },
     "requirements": {
       "status": "pending",
       "critic_verdict": null,

@@ -1,0 +1,101 @@
+# [Product Name] — Telemetry & Measurement Spec
+
+**Status:** Draft
+**Last Updated:** [date]
+**Working Backwards Session:** [{session-id}]
+
+---
+
+## North Star Metric
+
+[The single metric that best captures whether the product is delivering the outcome described in the Press Release.]
+
+**Metric:** [name]
+**Definition:** [precise definition — what counts, what doesn't]
+**Target:** [number or threshold, or TBD — establish baseline in first 30 days]
+
+---
+
+## Adoption
+
+[Who is using the product, at what rate, and how deeply.]
+
+### [Metric name]
+- **Measures:** [what]
+- **Why:** [link to PR success criterion or FAQ concern]
+- **How:** [specific event name, query, or data source]
+- **Target:** [threshold or TBD]
+- **Cadence:** [daily / weekly / monthly]
+
+---
+
+## Non-Adoption
+
+[Who is not using the product, where they dropped off, and what signals indicate a user is at risk of not returning.]
+
+### [Drop-off metric name — e.g., Onboarding Drop-off Rate]
+- **Measures:** [which step in the user journey users are abandoning]
+- **Why:** [what this tells us — friction? confusion? expectation mismatch?]
+- **How:** [specific funnel step, event sequence, or absence-of-event trigger]
+- **Target:** [acceptable threshold, or TBD]
+- **Cadence:** Weekly
+- **Investigation trigger:** [threshold at which this requires active investigation]
+
+---
+
+## Time-to-Value
+
+### Activation Event
+- **Definition:** [The specific action that constitutes "first success"]
+- **Event:** [event name to fire when this occurs]
+
+### Time-to-Activation
+- **Measures:** Median time from first access to activation event
+- **Why:** [link to PR — learnability and accessibility of stated benefit]
+- **How:** [event sequence and timestamp delta]
+- **Target:** [time threshold, or TBD]
+- **Cadence:** Weekly
+
+---
+
+## Customer Delight
+
+### [Satisfaction metric — e.g., Post-Activation CSAT]
+- **Measures:** [user satisfaction at a specific moment]
+- **Why:** [link to PR success criterion]
+- **How:** [survey trigger condition and collection method]
+- **Target:** [NPS ≥ X, CSAT ≥ X%, or equivalent]
+- **Cadence:** [when triggered]
+
+### Retention / Return Rate
+- **Measures:** [% of users who return within N days of first use]
+- **Why:** Retained users are the clearest signal of product value delivery
+- **How:** [definition of "return" for this product]
+- **Target:** [TBD — establish baseline in first 30 days]
+- **Cadence:** Monthly
+
+---
+
+## Outcome Validation
+
+| Press Release Success Criterion | Metric(s) | How Measured | Target |
+|---|---|---|---|
+| [criterion] | [metric name] | [how] | [target] |
+
+---
+
+## Instrumentation Requirements
+
+[What must be built. Each item becomes an engineering requirement in Stage 6.]
+
+- `[event_name]` — fired when [condition] — fields: [field list]
+- `[event_name]` — fired when [condition] — fields: [field list]
+- [Survey trigger condition]
+- [Analytics integrations required]
+
+---
+
+## Open Questions
+
+- `[OPEN]` [Measurement gap where a PR success criterion cannot yet be measured] — Owner: [unassigned]
+- `[OPEN]` [Compliance constraint affecting tracking] — Owner: [from FAQ or unassigned]
