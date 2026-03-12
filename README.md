@@ -192,11 +192,26 @@ The quality of the demo is directly constrained by the quality of the Press Rele
 
 ---
 
-### Stage 4: Documentation *(coming in Phase 5)*
+### Stage 4: Documentation
 
-User-facing documentation written as if the product already ships — a getting-started guide and how-to guides. In Working Backwards, writing the user manual before the engineering spec is a forcing function: if you can't explain how to use it, you don't understand what you're building.
+Issuer-facing developer documentation styled after **Visa Developer Center** — written as if the product already ships. Targeted at card issuers integrating the Xfinite card product into their consumer banking apps.
 
-**Output:** `docs/` directory inside the session folder.
+The Documentation Agent asks the PM about API naming, authentication method, core operations, sandbox URLs, and compliance requirements before writing. Then produces a complete documentation set.
+
+**Output:** `docs/` directory inside the session folder:
+
+| File | Contents |
+|---|---|
+| `index.md` | Product overview, capabilities, integration-at-a-glance table |
+| `getting-started.md` | Prerequisites, sandbox access, first API call |
+| `authentication.md` | mTLS / OAuth setup with code examples in JS + Python |
+| `integration-guide.md` | Step-by-step primary use case with request/response examples |
+| `api-reference.md` | All endpoints with field-level docs, request/response schemas |
+| `code-examples.md` | Copy-paste-ready examples in cURL, JavaScript, Python |
+| `error-codes.md` | All error codes with HTTP status, description, and resolution |
+| `testing.md` | Sandbox setup, test card IDs, scenarios checklist |
+| `going-live.md` | Pre-launch checklist, certification, compliance requirements |
+| `faq.md` | Common issuer integration questions |
 
 ---
 
@@ -377,8 +392,8 @@ AI-Product-Team/
 | ✅ Phase 1 | Project skeleton, session management, GitHub persistence, `/wb-status` |
 | ✅ Phase 2 | Press Release Agent, Critic, Stage 1 rubric, full revision loop |
 | ✅ Phase 3 | FAQ Agent (External + Internal), Stage 2 rubrics, full Stage 2 loop |
-| Phase 4 | Demo Builder Agent — generates a working React + Express app from validated PR + FAQ |
-| Phase 5 | Documentation Agent — writes user-facing docs before requirements |
+| ✅ Phase 4 | Demo Builder Agent — generates a working React + Express app from validated PR + FAQ |
+| ✅ Phase 5 | Documentation Agent — Visa Developer Center-style issuer integration docs |
 | Phase 6 | Requirements Agent, Stage 5 rubric, end-to-end pipeline complete |
 
 ---

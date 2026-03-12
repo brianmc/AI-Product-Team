@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "stage": "docs",
+  "dimensions": [
+    {
+      "id": "issuer-journey-completeness",
+      "name": "Issuer Integration Journey Completeness",
+      "pass_criteria": "The documentation covers the complete issuer integration journey from first contact to production: product overview, sandbox setup, authentication, core API integration, testing, and going live. An issuer bank developer could follow the docs end-to-end without needing to contact Visa or the product team for basic integration questions.",
+      "fail_criteria": "One or more major integration stages are missing or too thin to be actionable. An issuer developer reading the docs would not know how to authenticate, how to make their first API call, or what the path to production looks like."
+    },
+    {
+      "id": "technical-internal-consistency",
+      "name": "Technical Internal Consistency",
+      "pass_criteria": "API endpoints, request/response field names, error codes, and authentication flows are consistent across all documentation sections. A field named in the integration guide matches the field named in the API reference. Error codes listed in the API reference appear in the error codes table.",
+      "fail_criteria": "Field names, endpoint paths, or authentication details differ between sections. A developer following the integration guide would encounter terms or values that don't match the API reference. The docs feel like they were written independently rather than as a coherent system."
+    },
+    {
+      "id": "visa-developer-style",
+      "name": "Enterprise Developer Documentation Style",
+      "pass_criteria": "The documentation follows the professional enterprise developer docs pattern modelled on Visa Developer Center: clear section hierarchy (Overview → Getting Started → Authentication → Integration Guide → API Reference → Error Codes → Testing → Going Live), sandbox/production distinction, code examples in at least two languages, request/response schemas with field descriptions, and a professional tone appropriate for issuer bank engineering teams.",
+      "fail_criteria": "The documentation reads like an internal wiki or a rough spec rather than a polished developer portal. Missing sandbox/production distinction, no code examples, or API reference lacks field-level documentation. Tone is informal or inconsistent."
+    },
+    {
+      "id": "xfinite-specificity",
+      "name": "Xfinite Card Specificity",
+      "pass_criteria": "The documentation is written specifically for issuers integrating the Xfinite card product into their consumer banking apps. The Xfinite card is named, the cardholder use cases are described from the issuer's perspective, and any Xfinite-specific requirements (card programme rules, branding, cardholder flows) are called out explicitly.",
+      "fail_criteria": "The documentation is generic — it could apply to any card product or banking API. Xfinite-specific context is absent or minimal. An issuer developer would not understand what makes this integration specific to the Xfinite card programme."
+    },
+    {
+      "id": "pr-faq-grounding",
+      "name": "Press Release and FAQ Grounding",
+      "pass_criteria": "The documentation reflects the customer benefit and product capabilities described in the validated Press Release. Open items from the Internal FAQ that affect integration (legal, compliance, authentication method) are either resolved in the docs or explicitly flagged as [TBD — pre-launch].",
+      "fail_criteria": "The documentation contradicts or ignores the Press Release. Capabilities described in the PR are absent from the API reference. Internal FAQ blockers that would affect integration are not acknowledged."
+    }
+  ]
+}

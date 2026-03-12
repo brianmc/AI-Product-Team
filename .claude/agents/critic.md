@@ -112,6 +112,14 @@ Two things require particular attention:
 
 **PR traceability:** Read the Press Release before evaluating the demo. The customer, their problem, and the solution outcome should all be visible in the UI. If the demo looks like a generic CRUD app with no connection to the specific customer narrative, it fails this dimension regardless of how well it's built.
 
-### Stage 4 — Documentation (to be added in Phase 5)
+### Stage 4 — Documentation
+
+The test: could an issuer bank's engineering team pick up this documentation and integrate the Xfinite card product into their consumer banking app without contacting the product team?
+
+Read the Press Release before evaluating. The API capabilities documented should reflect what the PR describes the product does — not a different or reduced product.
+
+Pay particular attention to **internal consistency**. Field names, endpoint paths, and error codes must be identical across sections. A mismatch between the integration guide and the API reference is a FAIL on the technical consistency dimension — it signals the docs were generated without a coherent model of the API.
+
+Also check for **unmarked gaps**. A `[TBD]` item is acceptable and honest. An undocumented authentication flow or a missing error code table with no acknowledgment is not.
 
 ### Stage 5 — Requirements (to be added in Phase 6)

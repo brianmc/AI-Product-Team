@@ -403,7 +403,7 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
 
    Moving to Stage 4: Documentation.
    ```
-5. *(Phase 5 wires in Stage 4 here)*
+5. Proceed to **Stage 4: Documentation loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -424,6 +424,74 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
 3. If `revision_count >= 3`:
    - Commit whatever exists in the demo directory as-is, push
    - Tell the PM which Critic dimensions remain unresolved and what to address before resuming
+
+---
+
+---
+
+## Stage 4: Documentation loop
+
+### Invoke the Documentation Writer
+
+Use the Agent tool to delegate to the `docs-writer` agent. Pass:
+- The session ID and session directory path
+- Paths to all validated artifacts:
+  - `working-backwards/{session-id}/press-release.md`
+  - `working-backwards/{session-id}/faq-external.md`
+  - `working-backwards/{session-id}/faq-internal.md`
+
+The docs-writer will ask the PM clarifying questions (API name, auth method, core operations, sandbox URL, compliance requirements), confirm the plan, then generate the complete documentation set into `working-backwards/{session-id}/docs/`.
+
+### Invoke the Critic
+
+Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` agent. Pass:
+- The path to the docs directory: `working-backwards/{session-id}/docs/`
+- Rubric path: `.claude/rubrics/stage-4-docs.json`
+- The Press Release for PR grounding evaluation: `working-backwards/{session-id}/press-release.md`
+- The Internal FAQ for open item check: `working-backwards/{session-id}/faq-internal.md`
+- Which dimensions already passed (if revision cycle 2 or 3)
+
+### Branch on verdict
+
+**If `VERDICT: PASS`:**
+
+1. Update `session.json`:
+   - `stages.docs.status` → `"complete"`
+   - `stages.docs.critic_verdict` → `"PASS"`
+   - `current_stage` → `"requirements"`
+   - `updated_at` → current timestamp
+2. Commit the entire docs directory and updated session.json:
+   ```bash
+   git add working-backwards/{session-id}/docs/ working-backwards/{session-id}/session.json
+   git commit -m "Working Backwards [{session-id}]: Stage 4 Documentation - Critic PASS"
+   git push
+   ```
+3. Display:
+   ```
+   ─────────────────────────────────────────
+     ✓ Stage 1: Press Release        [ PASS ]
+     ✓ Stage 2: External FAQ         [ PASS ]
+     ✓ Stage 2: Internal FAQ         [ PASS ]
+     ✓ Stage 3: Visual Demo          [ PASS ]
+     ✓ Stage 4: Documentation        [ PASS ]
+     ▶ Stage 5: Requirements         [ IN PROGRESS ]
+   ─────────────────────────────────────────
+   Documentation committed to GitHub.
+   Moving to Stage 5: Requirements — the final stage.
+   ```
+4. *(Phase 6 wires in Stage 5 here)*
+
+**If `VERDICT: NEEDS REVISION`:**
+
+1. Read `revision_count` from `session.json` for `docs`
+2. If `revision_count < 3`:
+   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Show the PM the Critic's feedback per failing dimension
+   - Return to **Invoke the Documentation Writer** with current docs + Critic feedback
+   - The docs-writer fixes only the failing dimensions — it does not rewrite the full set
+3. If `revision_count >= 3`:
+   - Commit whatever exists in the docs directory as-is, push
+   - Tell the PM which dimensions remain unresolved. Most common: internal consistency failures (field names differ between sections) and missing Xfinite-specific context
 
 ---
 
