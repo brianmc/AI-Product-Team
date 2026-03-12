@@ -301,7 +301,7 @@ Rubrics live in `.claude/rubrics/` as versioned JSON files. Update a rubric by e
 | `stage-2-internal-faq.json` | Internal FAQ | Stakeholder coverage, answer completeness, blocker identification, no evasion |
 | `stage-3-demo.json` | Visual Demo | PR traceability, user journey coverage, structural runnability, mock data honesty |
 | `stage-4-docs.json` | Documentation | Issuer journey completeness, technical consistency, enterprise docs style, Xfinite specificity, PR/FAQ grounding |
-| `stage-5-requirements.json` | Requirements | Requirement traceability, testable ACs, edge cases, NFRs, open item propagation *(Phase 6)* |
+| `stage-5-requirements.json` | Requirements | Requirement traceability, testable ACs, edge cases, NFRs, open item propagation |
 
 ---
 
@@ -345,7 +345,7 @@ AI-Product-Team/
 │   │   ├── faq-writer.md            ← Stage 2
 │   │   ├── demo-builder.md          ← Stage 3
 │   │   ├── docs-writer.md           ← Stage 4
-│   │   ├── requirements-writer.md   ← Stage 5 (Phase 6)
+│   │   ├── requirements-writer.md   ← Stage 5
 │   │   └── critic.md                ← All stages
 │   ├── rubrics/
 │   │   ├── stage-1-press-release.json
@@ -353,7 +353,7 @@ AI-Product-Team/
 │   │   ├── stage-2-internal-faq.json
 │   │   ├── stage-3-demo.json
 │   │   ├── stage-4-docs.json
-│   │   └── stage-5-requirements.json  ← Phase 6
+│   │   └── stage-5-requirements.json
 │   └── skills/
 │       ├── working-backwards/SKILL.md
 │       ├── wb-status/SKILL.md
@@ -364,7 +364,7 @@ AI-Product-Team/
 │   └── output-formats/
 │       ├── press-release.md.template
 │       ├── faq.md.template
-│       └── requirements.md.template   ← Phase 6
+│       └── requirements.md.template
 ├── working-backwards/
 │   └── {session-id}/                  ← created per session
 ├── CLAUDE.md
@@ -383,7 +383,7 @@ AI-Product-Team/
 | Phase 3 | ✅ | FAQ Agent (External + Internal), Stage 2 rubrics, full Stage 2 loop |
 | Phase 4 | ✅ | Demo Builder Agent — React + Vite + Express app with screenshot support |
 | Phase 5 | ✅ | Documentation Agent — 10-file Visa Developer Center-style issuer docs |
-| Phase 6 | 🔄 | Requirements Agent, Stage 5 rubric, end-to-end pipeline complete |
+| Phase 6 | ✅ | Requirements Agent, Stage 5 rubric, end-to-end pipeline complete |
 
 ---
 

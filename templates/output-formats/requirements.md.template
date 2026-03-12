@@ -1,0 +1,91 @@
+# [Product Name] — Requirements
+
+**Status:** Draft
+**Last Updated:** [date]
+**Working Backwards Session:** [{session-id}]
+
+---
+
+## Problem
+
+[1–2 paragraphs derived directly from the Press Release problem paragraph. Who has the problem, how painful is it, what is the cost of inaction. Do not add content not established in the PR.]
+
+## Success Criteria
+
+- [Measurable outcome derived from the PR's stated customer benefit]
+- [Measurable outcome]
+- [Measurable outcome — or `[OPEN — measurement not established]` if the PR was vague]
+
+## User Journey
+
+[Step-by-step numbered flow of what the primary user does — from first access through completion of the core task. Derived from the Press Release "getting started" section, core capability description, and FAQ.]
+
+1. [Step 1]
+2. [Step 2]
+3. [Step 3]
+...
+
+## Requirements
+
+### [Requirement 1 — named for what the user can do]
+
+[Description of what the system must do. 2–4 sentences. Derived from the PR and FAQ.]
+
+**Acceptance Criteria:**
+- Given [context], when [user action], then [system response and outcome]
+- Given [edge/error case], when [action], then [correct handling]
+
+### [Requirement 2]
+
+[Description]
+
+**Acceptance Criteria:**
+- Given [...], when [...], then [...]
+
+### [Requirement 3]
+
+[Description]
+
+**Acceptance Criteria:**
+- Given [...], when [...], then [...]
+
+[Continue for all core requirements. Typically 3–5 for a well-scoped feature.]
+
+---
+
+## Scope
+
+### In Scope
+- [Capability 1 — tied to a specific requirement above]
+- [Capability 2]
+
+### Out of Scope (Future)
+- [Item not covered in the PR or FAQ — brief rationale for deferral]
+
+---
+
+## Edge Cases
+
+- **[Error scenario]:** [How the system must handle it]
+- **[Empty state]:** [What the user sees when there is no data]
+- **[Failure mode]:** [What happens when the core action fails]
+- **[Boundary condition]:** [What happens at volume, permission, or data limits]
+
+---
+
+## Technical Requirements
+
+- **Performance:** [Latency/throughput targets — from Internal FAQ, or `[OPEN — not established]`]
+- **Security / Auth:** [Auth model, data access constraints — from Internal FAQ, or `[OPEN — not established]`]
+- **Scale:** [Volume expectations — from Internal FAQ, or `[OPEN — not established]`]
+- **Compliance:** [Legal/regulatory requirements — from Internal FAQ, or `[OPEN — not established]`]
+- **Compatibility:** [Integration points, API contracts, platform constraints — from Internal FAQ]
+
+---
+
+## Open Questions
+
+[Every [OPEN] and [BLOCKER] from the FAQs that affects the requirements. Do not drop or resolve silently.]
+
+- `[OPEN]` [Question text] — affects: [requirement name] — Owner: [from FAQ, or `unassigned`]
+- `[BLOCKER]` [Question text] — blocks: [what cannot proceed until resolved] — Owner: [from FAQ]

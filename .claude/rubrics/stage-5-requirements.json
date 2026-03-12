@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "stage": "requirements",
+  "dimensions": [
+    {
+      "id": "requirement-traceability",
+      "name": "Requirement Traceability",
+      "pass_criteria": "Every functional requirement traces to a specific capability, customer need, or constraint established in the Press Release, External FAQ, or Internal FAQ. A reader could trace each requirement back to its source. No requirements appear that are not grounded in the validated artifacts.",
+      "fail_criteria": "One or more requirements cannot be traced to the Press Release or FAQ. The requirements describe capabilities not established in the prior artifacts, or contradict what was established in them."
+    },
+    {
+      "id": "testable-acceptance-criteria",
+      "name": "Testable Acceptance Criteria",
+      "pass_criteria": "Every requirement has at least one acceptance criterion written in given/when/then format. Each criterion specifies a condition, an action, and an observable outcome that can be verified by a test. No criterion is vague, aspirational, or untestable (e.g., 'the system should be fast', 'the experience should be smooth').",
+      "fail_criteria": "One or more requirements lack acceptance criteria, have criteria not in given/when/then format, or have criteria that cannot be turned into a test. Vague or aspirational criteria are present."
+    },
+    {
+      "id": "edge-case-coverage",
+      "name": "Edge Case Coverage",
+      "pass_criteria": "The requirements address what happens in failure modes, empty states, boundary conditions, and error scenarios relevant to the core use case. An engineer implementing from this document would not need to invent error handling, empty state behaviour, or limit enforcement.",
+      "fail_criteria": "The requirements cover only the happy path. Error states, empty states, limits, or boundary conditions that are clearly implicit in the use case are absent or unaddressed."
+    },
+    {
+      "id": "nonfunctional-requirements",
+      "name": "Non-Functional Requirements",
+      "pass_criteria": "Performance, security, scale, and compliance requirements are present. They are either derived from the Internal FAQ or explicitly marked [OPEN — not established in Internal FAQ]. An engineer knows what targets to build to, or knows these are open questions that must be resolved before build.",
+      "fail_criteria": "Non-functional requirements are missing entirely, or are stated so vaguely that an engineer cannot design to them (e.g., 'the system should be secure and fast'). NFRs established in the Internal FAQ are absent from the requirements."
+    },
+    {
+      "id": "open-item-propagation",
+      "name": "Open Item Propagation",
+      "pass_criteria": "Every [OPEN] and [BLOCKER] item from the External and Internal FAQs that affects the requirements is surfaced explicitly — either inline in the relevant requirement or in a dedicated Open Questions section. No open items are silently dropped or resolved with invented details. The requirements give an accurate picture of what is and is not yet decided.",
+      "fail_criteria": "One or more [OPEN] or [BLOCKER] items from the FAQs are absent from the requirements, or have been silently resolved with assumptions not established in the FAQ. The requirements give a false impression of completeness."
+    }
+  ]
+}

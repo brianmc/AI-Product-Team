@@ -1,6 +1,6 @@
 ---
 name: working-backwards
-description: Start or resume an Amazon Working Backwards session. Guides the PM through Press Release → External FAQ → Internal FAQ → Requirements, with a Critic review at each stage. All outputs are committed to GitHub.
+description: Start or resume an Amazon Working Backwards session. Guides the PM through Press Release → External FAQ → Internal FAQ → Visual Demo → Documentation → Requirements, with a Critic review at each stage. All outputs are committed to GitHub.
 argument-hint: "[feature idea] | resume [session-id]"
 allowed-tools: Bash, Read, Write
 skills:
@@ -75,7 +75,9 @@ Session {session-id} initialized and saved to GitHub.
   ▶ Stage 1: Press Release        [ IN PROGRESS ]
     Stage 2: External FAQ         [ PENDING ]
     Stage 2: Internal FAQ         [ PENDING ]
-    Stage 3: Requirements         [ PENDING ]
+    Stage 3: Visual Demo          [ PENDING ]
+    Stage 4: Documentation        [ PENDING ]
+    Stage 5: Requirements         [ PENDING ]
 ─────────────────────────────────────────
 ```
 
@@ -104,10 +106,12 @@ If there is a diff, warn the PM and ask which version to use before proceeding.
 
 Read `current_stage` from `session.json` and route accordingly:
 
-- `press-release` (status `in-progress`) → **Stage 1: Press Release loop**, passing any existing draft as context
-- `faq-external` → **Stage 2: FAQ loop** in External mode *(Phase 3)*
-- `faq-internal` → **Stage 2: FAQ loop** in Internal mode *(Phase 3)*
-- `requirements` → **Stage 3: Requirements loop** *(Phase 4)*
+- `press-release` → **Stage 1: Press Release loop**, passing any existing draft as context
+- `faq-external` → **Stage 2: External FAQ loop**
+- `faq-internal` → **Stage 2: Internal FAQ loop**
+- `demo` → **Stage 3: Visual Demo loop**
+- `docs` → **Stage 4: Documentation loop**
+- `requirements` → **Stage 5: Requirements loop**
 - All stages `PASS` → display complete package, confirm session is finished
 
 ---
@@ -479,7 +483,7 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
    Documentation committed to GitHub.
    Moving to Stage 5: Requirements — the final stage.
    ```
-4. *(Phase 6 wires in Stage 5 here)*
+4. Proceed to **Stage 5: Requirements loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -491,7 +495,92 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
    - The docs-writer fixes only the failing dimensions — it does not rewrite the full set
 3. If `revision_count >= 3`:
    - Commit whatever exists in the docs directory as-is, push
-   - Tell the PM which dimensions remain unresolved. Most common: internal consistency failures (field names differ between sections) and missing Xfinite-specific context
+   - Tell the PM which dimensions remain unresolved. Most common: internal consistency failures (field names differ between sections) or documentation that doesn't match the product type described in the Press Release
+
+---
+
+---
+
+## Stage 5: Requirements loop
+
+### Invoke the Requirements Writer
+
+Use the Agent tool to delegate to the `requirements-writer` agent. Pass:
+- The session ID and session directory path
+- Paths to all validated artifacts:
+  - `working-backwards/{session-id}/press-release.md`
+  - `working-backwards/{session-id}/faq-external.md`
+  - `working-backwards/{session-id}/faq-internal.md`
+
+The requirements-writer will ask the PM clarifying questions, confirm the requirements structure, then generate `working-backwards/{session-id}/requirements.md`.
+
+### Invoke the Critic
+
+Once the `requirements-writer` returns, use the Agent tool to delegate to the `critic` agent. Pass:
+- The full requirements document text
+- Rubric path: `.claude/rubrics/stage-5-requirements.json`
+- The Press Release for traceability evaluation: `working-backwards/{session-id}/press-release.md`
+- The Internal FAQ for open item check: `working-backwards/{session-id}/faq-internal.md`
+- Which dimensions already passed (if revision cycle 2 or 3)
+
+### Branch on verdict
+
+**If `VERDICT: PASS`:**
+
+1. Update `session.json`:
+   - `stages.requirements.status` → `"complete"`
+   - `stages.requirements.critic_verdict` → `"PASS"`
+   - `current_stage` → `"complete"`
+   - `updated_at` → current timestamp
+2. Commit the requirements and updated session.json:
+   ```bash
+   git add working-backwards/{session-id}/requirements.md working-backwards/{session-id}/session.json
+   git commit -m "Working Backwards [{session-id}]: Stage 5 Requirements - Critic PASS"
+   git push
+   ```
+3. Display the complete package:
+   ```
+   ─────────────────────────────────────────
+     ✓ Stage 1: Press Release        [ PASS ]
+     ✓ Stage 2: External FAQ         [ PASS ]
+     ✓ Stage 2: Internal FAQ         [ PASS ]
+     ✓ Stage 3: Visual Demo          [ PASS ]
+     ✓ Stage 4: Documentation        [ PASS ]
+     ✓ Stage 5: Requirements         [ PASS ]
+   ─────────────────────────────────────────
+   Working Backwards session complete.
+   All artifacts committed to GitHub.
+
+   Your Working Backwards package:
+     ✓ press-release.md      — validated customer narrative
+     ✓ faq-external.md       — customer Q&A
+     ✓ faq-internal.md       — engineering & leadership Q&A
+     ✓ demo/                 — working prototype (npm install && npm start)
+     ✓ docs/                 — user-facing documentation
+     ✓ requirements.md       — engineer-ready requirements
+
+   [If any [OPEN] or [BLOCKER] items were surfaced in requirements.md, list them here so the PM sees them before closing the session.]
+   ```
+
+**If `VERDICT: NEEDS REVISION`:**
+
+1. Read `revision_count` from `session.json` for `requirements`
+2. If `revision_count < 3`:
+   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Show the PM the Critic's feedback per failing dimension:
+     ```
+     The Critic reviewed the requirements and found issues to address:
+
+     [For each failing dimension:]
+     ❌ {Dimension Name}
+        Issue: {specific issue}
+        Fix:   {concrete suggested revision}
+     ```
+   - Return to **Invoke the Requirements Writer** with the current draft + Critic feedback
+   - The requirements-writer fixes only the failing dimensions — it does not rewrite from scratch
+3. If `revision_count >= 3`:
+   - Commit whatever exists as `requirements.md`, push
+   - Tell the PM which dimensions remain unresolved. Most common: acceptance criteria that aren't testable, or `[OPEN]` items from the FAQ that haven't been surfaced in the requirements
 
 ---
 

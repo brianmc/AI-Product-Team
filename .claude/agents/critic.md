@@ -122,4 +122,14 @@ Pay particular attention to **internal consistency**. Field names, endpoint path
 
 Also check for **unmarked gaps**. A `[TBD]` item is acceptable and honest. An undocumented authentication flow or a missing error code table with no acknowledgment is not.
 
-### Stage 5 — Requirements (to be added in Phase 6)
+### Stage 5 — Requirements
+
+The test: could an engineer (or their coding agent) start building from this requirements document tomorrow without a single follow-up question?
+
+Read the Press Release before evaluating. Every requirement should trace to something the PR or FAQ established. If a requirement appears with no visible connection to the customer narrative, that's a traceability failure.
+
+Two things require particular attention:
+
+**Acceptance criteria quality.** Given/when/then is not just a format preference — it's a testability check. An AC that says "the system should handle errors gracefully" cannot be tested. An AC that says "given a network failure, when the user submits the form, then the system displays 'Connection failed — please try again' and preserves the form data" can be tested. If the ACs read like aspirations rather than specifications, flag the failing dimension.
+
+**Open item propagation.** Read the Internal FAQ before evaluating. Count the `[OPEN]` and `[BLOCKER]` items. Every one that affects the requirements should appear in the requirements document — inline or in the Open Questions section. If open items are present in the FAQ but absent from the requirements, that's a propagation failure — the requirements give a false impression of completeness.
