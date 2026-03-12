@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "stage": "demo",
+  "dimensions": [
+    {
+      "id": "pr-traceability",
+      "name": "Press Release Traceability",
+      "pass_criteria": "A stakeholder who has read the Press Release can watch a walkthrough of the demo and immediately recognise the product. The core customer, their problem, and the solution are all visible in the app — not just implied.",
+      "fail_criteria": "The demo looks like a generic app that could be anything. The specific customer persona, problem, or benefit from the Press Release is not evident in the UI, copy, or data shown."
+    },
+    {
+      "id": "user-journey-coverage",
+      "name": "Core User Journey Coverage",
+      "pass_criteria": "The demo implements the primary user journey end-to-end: the user can start at the entry point, complete the core action described in the Press Release, and see the outcome. The journey has a beginning, middle, and end.",
+      "fail_criteria": "The demo shows isolated screens with no navigable flow, or stops before the user reaches the outcome described in the PR. A stakeholder cannot 'experience' the product — they can only see screenshots of it."
+    },
+    {
+      "id": "runnability",
+      "name": "Structural Runnability",
+      "pass_criteria": "All imported components, modules, and files exist in the project. All npm dependencies in package.json are real, published packages. The vite.config.js and package.json scripts are syntactically correct. npm install && npm start should succeed without code errors.",
+      "fail_criteria": "One or more imported files do not exist in the project. A dependency in package.json is misspelled or fabricated. The start script is malformed. There are syntax errors in any file that would prevent the app from loading."
+    },
+    {
+      "id": "mock-data-honesty",
+      "name": "Mock Data Honesty",
+      "pass_criteria": "All data shown in the demo is clearly mock data — either obviously placeholder (e.g. 'Acme Corp', 'Jane Smith') or labelled as demo data in the UI or in a comment in the server code. The demo does not imply real backend integration it does not have.",
+      "fail_criteria": "The demo presents mock data in a way that implies a working backend, real integrations, or real user data. A non-technical stakeholder could be misled about what is actually built vs. what is being demonstrated."
+    }
+  ]
+}

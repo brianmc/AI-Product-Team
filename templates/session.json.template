@@ -24,6 +24,18 @@
       "revision_count": 0,
       "artifact_path": ""
     },
+    "demo": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": ""
+    },
+    "docs": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": ""
+    },
     "requirements": {
       "status": "pending",
       "critic_verdict": null,

@@ -102,4 +102,16 @@ The test: could an engineering lead read this FAQ and know what they're committi
 
 Blockers deserve special attention. An [OPEN] item that would actually stop the build from proceeding safely is a [BLOCKER]. If the PM has labelled something [OPEN] when it should be [BLOCKER] (e.g. an unresolved legal risk, a dependency that doesn't exist yet), flag this in your feedback.
 
-### Stage 3 — Requirements (to be added in Phase 4)
+### Stage 3 — Visual Demo
+
+The test: could a non-technical stakeholder run this app, walk through it, and come away understanding the product described in the Press Release?
+
+Two things require particular attention:
+
+**Runnability:** The Critic cannot execute code, so this is a structural check. Verify that every imported file exists, every npm package is a real published package, every Express route called by the React app is defined, and there are no obvious syntax errors. Flag any mismatch as a FAIL — a demo that doesn't run is worse than no demo.
+
+**PR traceability:** Read the Press Release before evaluating the demo. The customer, their problem, and the solution outcome should all be visible in the UI. If the demo looks like a generic CRUD app with no connection to the specific customer narrative, it fails this dimension regardless of how well it's built.
+
+### Stage 4 — Documentation (to be added in Phase 5)
+
+### Stage 5 — Requirements (to be added in Phase 6)

@@ -328,7 +328,7 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
    Internal FAQ committed to GitHub.
    Moving to Stage 3: Requirements.
    ```
-5. *(Phase 4 wires in Stage 3 here)*
+5. Proceed to **Stage 3: Visual Demo loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -340,6 +340,90 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
 3. If `revision_count >= 3`:
    - Save best draft to `working-backwards/{session-id}/faq-internal.md`, commit, push
    - Tell the PM what's unresolved (typically: missing stakeholder coverage or unowned open items) and suggest resolving blockers with the relevant team before resuming
+
+---
+
+## Stage 3: Visual Demo loop
+
+### Invoke the Demo Builder
+
+Use the Agent tool to delegate to the `demo-builder` agent. Pass:
+- The session ID and session directory path
+- Paths to all validated artifacts:
+  - `working-backwards/{session-id}/press-release.md`
+  - `working-backwards/{session-id}/faq-external.md`
+  - `working-backwards/{session-id}/faq-internal.md`
+
+The Demo Builder will ask the PM clarifying questions, wait for answers, confirm the build plan, then generate the complete React + Express app into `working-backwards/{session-id}/demo/`.
+
+**Important:** The Demo Builder fronts all its questions before writing any code. Do not interrupt the build once the PM has confirmed the plan.
+
+### Invoke the Critic
+
+Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` agent. Pass:
+- The path to the demo directory: `working-backwards/{session-id}/demo/`
+- Rubric path: `.claude/rubrics/stage-3-demo.json`
+- The Press Release for PR traceability evaluation: `working-backwards/{session-id}/press-release.md`
+- Which dimensions already passed (if revision cycle 2 or 3)
+
+### Branch on verdict
+
+**If `VERDICT: PASS`:**
+
+1. The demo files are already written to the session directory — no additional write step needed
+2. Update `session.json`:
+   - `stages.demo.status` → `"complete"`
+   - `stages.demo.critic_verdict` → `"PASS"`
+   - `current_stage` → `"docs"`
+   - `updated_at` → current timestamp
+3. Commit the entire demo directory and updated session.json:
+   ```bash
+   git add working-backwards/{session-id}/demo/ working-backwards/{session-id}/session.json
+   git commit -m "Working Backwards [{session-id}]: Stage 3 Visual Demo - Critic PASS"
+   git push
+   ```
+4. Display:
+   ```
+   ─────────────────────────────────────────
+     ✓ Stage 1: Press Release        [ PASS ]
+     ✓ Stage 2: External FAQ         [ PASS ]
+     ✓ Stage 2: Internal FAQ         [ PASS ]
+     ✓ Stage 3: Visual Demo          [ PASS ]
+     ▶ Stage 4: Documentation        [ IN PROGRESS ]
+       Stage 5: Requirements         [ PENDING ]
+   ─────────────────────────────────────────
+   Demo committed to GitHub.
+
+   To run the demo:
+     cd working-backwards/{session-id}/demo
+     npm install
+     npm start
+
+   Opens at http://localhost:3000
+
+   Moving to Stage 4: Documentation.
+   ```
+5. *(Phase 5 wires in Stage 4 here)*
+
+**If `VERDICT: NEEDS REVISION`:**
+
+1. Read `revision_count` from `session.json` for `demo`
+2. If `revision_count < 3`:
+   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Show the PM the Critic's feedback per failing dimension:
+     ```
+     The Critic reviewed the demo and found issues to address:
+
+     [For each failing dimension:]
+     ❌ {Dimension Name}
+        Issue: {specific issue}
+        Fix:   {concrete suggested revision}
+     ```
+   - Return to **Invoke the Demo Builder** with the current demo files + Critic feedback
+   - The Demo Builder fixes only the failing dimensions — it does not rebuild from scratch
+3. If `revision_count >= 3`:
+   - Commit whatever exists in the demo directory as-is, push
+   - Tell the PM which Critic dimensions remain unresolved and what to address before resuming
 
 ---
 
