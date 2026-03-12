@@ -2,7 +2,7 @@
 
 A Claude Code extension that guides product managers through Amazon's **Working Backwards** methodology using a multi-agent pipeline.
 
-Instead of jumping straight to requirements, Working Backwards forces you to start from the customer: write the Press Release first, stress-test it with hard questions, then — and only then — write the engineering spec. This extension makes that process rigorous, structured, and impossible to shortcut.
+Instead of jumping straight to requirements, Working Backwards forces you to start from the customer: write the Press Release first, stress-test it with hard questions, build and document the experience, then — and only then — write the engineering spec. This extension makes that process rigorous, structured, and impossible to shortcut.
 
 ---
 
@@ -15,11 +15,11 @@ Stage 1: Press Release     → Who is the customer? What do they get?
 Stage 2: External FAQ      → What would a skeptical customer ask?
 Stage 2: Internal FAQ      → What would engineering and leadership ask?
 Stage 3: Visual Demo       → A working React + Express app, runnable on localhost
-Stage 4: Documentation     → User-facing docs written as if the product already ships
+Stage 4: Documentation     → Issuer developer docs written as if the product ships
 Stage 5: Requirements      → Engineer-ready PRD derived from all of the above
 ```
 
-Each stage is reviewed by a **Critic agent** before the next stage unlocks. You cannot write requirements until your Press Release, FAQ, demo, and documentation have passed. That's the point.
+Each stage is reviewed by a **Critic agent** before the next stage unlocks. You cannot write requirements until your Press Release, FAQ, demo, and documentation have all passed. That's the point.
 
 All outputs are committed to GitHub after each stage passes — giving you a complete, version-controlled Working Backwards package for every feature you build.
 
@@ -27,13 +27,10 @@ All outputs are committed to GitHub after each stage passes — giving you a com
 
 ## Prerequisites
 
-1. **Claude Code** — [Install Claude Code](https://claude.ai/claude-code)
-2. **`gh` CLI** — installed and authenticated:
-   ```bash
-   brew install gh
-   gh auth login
-   ```
-3. **Git** — configured with push access to this repo
+- **Claude Code** — [Install Claude Code](https://claude.ai/claude-code)
+- **`gh` CLI** — `brew install gh && gh auth login`
+- **Node.js ≥18 + npm** — required to run the Stage 3 demo locally (`brew install node`)
+- **Git** — configured with push access to this repo
 
 ---
 
@@ -52,17 +49,15 @@ cd AI-Product-Team
 claude
 ```
 
-The skills and agents load automatically from `.claude/` when Claude Code opens in this directory.
+Skills and agents load automatically from `.claude/` when Claude Code opens here.
 
 ### 3. Verify setup
-
-Run this in Claude Code to confirm the skills are available:
 
 ```
 /working-backwards
 ```
 
-If prompted for a feature idea, setup is working. If you see an authentication error, run `gh auth login` and try again.
+If prompted for a feature idea, setup is working. If you see an auth error, run `gh auth login` and try again.
 
 ---
 
@@ -81,17 +76,10 @@ If prompted for a feature idea, setup is working. If you see an authentication e
 /working-backwards "self-serve billing for SMB customers"
 ```
 
-You'll be walked through the full pipeline. The Press Release Agent will ask you about your customer, their problem, and what the product does for them — before writing a single word.
-
 ### Resume a session
 
 ```
 /working-backwards resume [session-id]
-```
-
-**Example:**
-```
-/working-backwards resume wb-20260308-143022
 ```
 
 The session picks up exactly where you left off. All prior stage outputs are loaded from GitHub automatically.
@@ -102,7 +90,7 @@ The session picks up exactly where you left off. All prior stage outputs are loa
 /wb-status [session-id]
 ```
 
-If you omit the session ID and only one session exists, it displays that one automatically. With multiple sessions, it lists them and asks which to show.
+If you omit the session ID and only one session exists, it displays that one automatically.
 
 **Example output:**
 ```
@@ -111,20 +99,24 @@ If you omit the session ID and only one session exists, it displays that one aut
   ID:      wb-20260308-143022
   Feature: bulk export tool for enterprise customers
   Started: 2026-03-08T14:30:22Z
-  Updated: 2026-03-08T15:12:44Z
+  Updated: 2026-03-08T15:44:11Z
 ─────────────────────────────────────────────────────────────
   Stage 1: Press Release        [ PASS ]
-  Stage 2: External FAQ         [ IN PROGRESS ]  (1 revision)
-  Stage 2: Internal FAQ         [ PENDING ]
-  Stage 3: Requirements         [ PENDING ]
+  Stage 2: External FAQ         [ PASS ]
+  Stage 2: Internal FAQ         [ PASS ]
+  Stage 3: Visual Demo          [ IN PROGRESS ]  (1 revision)
+  Stage 4: Documentation        [ PENDING ]
+  Stage 5: Requirements         [ PENDING ]
 ─────────────────────────────────────────────────────────────
-  Current stage: faq-external
+  Current stage: demo
 
   Committed artifacts:
     ✓ press-release.md
-    ✗ faq-external.md   (pending)
-    ✗ faq-internal.md   (pending)
-    ✗ requirements.md   (pending)
+    ✓ faq-external.md
+    ✓ faq-internal.md
+    ✗ demo/          (in progress)
+    ✗ docs/          (pending)
+    ✗ requirements.md (pending)
 ─────────────────────────────────────────────────────────────
   Run `/working-backwards resume wb-20260308-143022` to continue.
 ```
@@ -142,7 +134,7 @@ The Press Release is written as if the product has already shipped. This forces 
 - What is their problem today? What are they doing instead?
 - What does the product do for them?
 
-**Required sections in the output:**
+**Required sections:**
 | Section | What it contains |
 |---|---|
 | Headline | One sentence: product name + specific customer benefit |
@@ -153,71 +145,73 @@ The Press Release is written as if the product has already shipped. This forces 
 | Getting started | How a customer begins using it |
 | Customer quote | Specific and believable — marked `[placeholder]` if not yet validated |
 
-**Critic rubric (5 dimensions):**
-- Customer definition — specific, not vague
-- Problem evidence — concrete, not generic
-- Customer benefit — clear and specific
-- Spokesperson quote — substantive, not boilerplate
-- Customer quote — specific and honest about placeholders
+**Critic rubric (5 dimensions):** customer definition, problem evidence, customer benefit, spokesperson quote, customer quote.
 
-The stage passes when all 5 dimensions pass. Maximum 3 revision cycles before the pipeline pauses and asks you to gather more customer evidence.
+Maximum 3 revision cycles before the pipeline pauses and asks you to gather more customer evidence.
 
 ---
 
-### Stage 2: External FAQ *(coming in Phase 3)*
+### Stage 2: External FAQ
 
 The hardest questions a skeptical target customer would ask. 5–8 questions minimum, prioritised by which ones are most likely to reveal product weaknesses. Every question must be answered or explicitly marked `[OPEN — owner: X]`.
 
----
-
-### Stage 2: Internal FAQ *(coming in Phase 3)*
-
-The hardest questions from engineering, legal, finance, and leadership. Covers feasibility, compliance, business model, and build plan. Build-blocking issues are flagged as `[BLOCKER]`.
+**Critic rubric (4 dimensions):** question quality (no softballs), answer completeness, no evasive answers, coverage of critical concerns (data/privacy, workflow change, cost, failure modes, competition).
 
 ---
 
-### Stage 3: Visual Demo *(coming in Phase 4)*
+### Stage 2: Internal FAQ
 
-A working React + Express front-end application generated from the validated Press Release and FAQ. Demonstrates the core user journey so stakeholders can see and interact with the product concept before any production code is written.
+The hardest questions from engineering, legal, finance, and leadership. Covers feasibility, compliance, business model, and build plan. Build-blocking issues are flagged as `[BLOCKER — owner: X]`.
 
-**Output:** `demo/` directory inside the session folder, containing a self-contained React + Express app.
+**Critic rubric (4 dimensions):** stakeholder coverage, answer completeness, blocker identification, no evasive answers.
 
+---
+
+### Stage 3: Visual Demo
+
+A working React + Express front-end application generated from the validated Press Release and FAQ. Demonstrates the core user journey so stakeholders can experience the product concept before any production code is written.
+
+The Demo Builder Agent asks upfront about existing screenshots or mockups, visual style, key screens, and the primary user action — then builds. If you have existing UI assets, share them and the demo will match your visual language.
+
+**To run after Stage 3 passes:**
 ```bash
 cd working-backwards/{session-id}/demo
 npm install
-npm start   # opens on localhost
+npm start   # opens at http://localhost:3000
 ```
 
-The quality of the demo is directly constrained by the quality of the Press Release. A specific PR with a clear user journey produces a genuinely demoable app. If the demo looks wrong, it usually means the PR needs revision.
+**Critic rubric (4 dimensions):** PR traceability, core user journey coverage, structural runnability (all imports and routes exist), mock data honesty.
 
 ---
 
 ### Stage 4: Documentation
 
-Issuer-facing developer documentation styled after **Visa Developer Center** — written as if the product already ships. Targeted at card issuers integrating the Xfinite card product into their consumer banking apps.
+Issuer-facing developer documentation styled after **Visa Developer Center** — written as if the product already ships. Targeted at card issuers integrating the Xfinite card product into their consumer banking apps for cardholders.
 
-The Documentation Agent asks the PM about API naming, authentication method, core operations, sandbox URLs, and compliance requirements before writing. Then produces a complete documentation set.
+The Documentation Agent asks about API naming, authentication method (defaults to mTLS), core API operations, sandbox URLs, and compliance requirements before writing.
 
-**Output:** `docs/` directory inside the session folder:
+**Output — 10-file documentation set:**
 
 | File | Contents |
 |---|---|
-| `index.md` | Product overview, capabilities, integration-at-a-glance table |
-| `getting-started.md` | Prerequisites, sandbox access, first API call |
-| `authentication.md` | mTLS / OAuth setup with code examples in JS + Python |
+| `index.md` | Product overview, capabilities, integration-at-a-glance, sandbox vs production |
+| `getting-started.md` | Prerequisites, sandbox access request, first API call |
+| `authentication.md` | mTLS / OAuth setup with full JS + Python code examples |
 | `integration-guide.md` | Step-by-step primary use case with request/response examples |
 | `api-reference.md` | All endpoints with field-level docs, request/response schemas |
 | `code-examples.md` | Copy-paste-ready examples in cURL, JavaScript, Python |
 | `error-codes.md` | All error codes with HTTP status, description, and resolution |
-| `testing.md` | Sandbox setup, test card IDs, scenarios checklist |
-| `going-live.md` | Pre-launch checklist, certification, compliance requirements |
+| `testing.md` | Sandbox setup, test Xfinite card IDs, scenario checklist |
+| `going-live.md` | Pre-launch checklist, Visa certification, compliance requirements |
 | `faq.md` | Common issuer integration questions |
+
+**Critic rubric (5 dimensions):** issuer journey completeness, technical internal consistency, enterprise developer docs style, Xfinite card specificity, PR/FAQ grounding.
 
 ---
 
-### Stage 5: Requirements *(coming in Phase 6)*
+### Stage 5: Requirements
 
-Translated directly from the validated Press Release, FAQ, demo, and documentation. Every requirement traces back to the established customer narrative — nothing invented independently. Open items from the FAQ surface as explicit `[OPEN]` gaps. Engineer-ready, with acceptance criteria in given/when/then format.
+Translated directly from all validated prior stages: Press Release, both FAQs, demo, and documentation. Every requirement traces back to the established customer narrative — nothing invented independently. Open items from the FAQ surface as explicit `[OPEN]` gaps. Engineer-ready, with acceptance criteria in given/when/then format.
 
 ---
 
@@ -228,25 +222,34 @@ Every session produces a directory in this repo:
 ```
 working-backwards/
   {session-id}/
-    press-release.md      ← committed when Stage 1 passes the Critic
-    faq-external.md       ← committed when Stage 2 External passes
-    faq-internal.md       ← committed when Stage 2 Internal passes
-    demo/                 ← committed when Stage 3 passes the Critic
+    press-release.md        ← committed on Stage 1 Critic PASS
+    faq-external.md         ← committed on Stage 2 External Critic PASS
+    faq-internal.md         ← committed on Stage 2 Internal Critic PASS
+    demo/                   ← committed on Stage 3 Critic PASS
       package.json
+      vite.config.js
+      index.html
       src/
         App.jsx
+        App.css
         components/
       server/
         index.js
-      README.md           ← npm install && npm start
-    docs/                 ← committed when Stage 4 passes the Critic
+      README.md             ← npm install && npm start
+    docs/                   ← committed on Stage 4 Critic PASS
+      index.md
       getting-started.md
-      how-to-guides.md
-    requirements.md       ← committed when Stage 5 passes the Critic
-    session.json          ← updated after every agent interaction
+      authentication.md
+      integration-guide.md
+      api-reference.md
+      code-examples.md
+      error-codes.md
+      testing.md
+      going-live.md
+      faq.md
+    requirements.md         ← committed on Stage 5 Critic PASS
+    session.json            ← updated after every agent interaction
 ```
-
-Each stage output is committed to GitHub the moment the Critic approves it — not at the end of the session. If you close Claude Code mid-session, your work is safe.
 
 ### session.json schema
 
@@ -254,24 +257,17 @@ Each stage output is committed to GitHub the moment the Critic approves it — n
 {
   "session_id": "wb-20260308-143022",
   "created_at": "2026-03-08T14:30:22Z",
-  "updated_at": "2026-03-08T15:12:44Z",
+  "updated_at": "2026-03-08T15:44:11Z",
   "repo": "brianmc/AI-Product-Team",
   "feature_idea": "bulk export tool for enterprise customers",
-  "current_stage": "faq-external",
+  "current_stage": "demo",
   "stages": {
-    "press-release": {
-      "status": "complete",
-      "critic_verdict": "PASS",
-      "revision_count": 1,
-      "artifact_path": "working-backwards/wb-20260308-143022/press-release.md"
-    },
-    "faq-external": {
-      "status": "in-progress",
-      "critic_verdict": null,
-      "revision_count": 1,
-      "artifact_path": "working-backwards/wb-20260308-143022/faq-external.md"
-    },
-    ...
+    "press-release": { "status": "complete", "critic_verdict": "PASS", "revision_count": 1 },
+    "faq-external":  { "status": "complete", "critic_verdict": "PASS", "revision_count": 0 },
+    "faq-internal":  { "status": "complete", "critic_verdict": "PASS", "revision_count": 1 },
+    "demo":          { "status": "in-progress", "critic_verdict": null, "revision_count": 1 },
+    "docs":          { "status": "pending", "critic_verdict": null, "revision_count": 0 },
+    "requirements":  { "status": "pending", "critic_verdict": null, "revision_count": 0 }
   },
   "invocation_log": []
 }
@@ -281,12 +277,14 @@ Each stage output is committed to GitHub the moment the Critic approves it — n
 
 ## Agents
 
-| Agent | Role | Invoked by |
+| Agent | Role | Stage |
 |---|---|---|
-| `press-release-writer` | Drafts and revises Press Releases | Orchestrator (Stage 1) |
-| `faq-writer` | Generates and answers hard questions (External + Internal modes) | Orchestrator (Stage 2) — *Phase 3* |
-| `requirements-writer` | Translates validated PR + FAQ into engineering specs | Orchestrator (Stage 3) — *Phase 4* |
-| `critic` | Reviews all stage outputs against versioned rubrics | Orchestrator (after each worker) |
+| `press-release-writer` | Drafts and revises the customer-centric Press Release | Stage 1 |
+| `faq-writer` | Generates hard questions and drafts answers (External + Internal modes) | Stage 2 |
+| `demo-builder` | Asks clarifying questions then generates a working React + Express app | Stage 3 |
+| `docs-writer` | Writes 10-file Visa-style issuer developer documentation | Stage 4 |
+| `requirements-writer` | Translates all validated artifacts into engineer-ready requirements | Stage 5 |
+| `critic` | Reviews every stage output against a versioned, stage-specific rubric | All stages |
 
 Agents live in `.claude/agents/`. They are invoked by the Orchestrator — you never call them directly.
 
@@ -294,48 +292,46 @@ Agents live in `.claude/agents/`. They are invoked by the Orchestrator — you n
 
 ## Critic rubrics
 
-Rubrics live in `.claude/rubrics/` as versioned JSON files. They define the pass/fail criteria the Critic uses for each stage.
+Rubrics live in `.claude/rubrics/` as versioned JSON files. Update a rubric by editing the file and incrementing the `version` field — no agent redeployment needed.
 
 | File | Stage | Dimensions |
 |---|---|---|
 | `stage-1-press-release.json` | Press Release | Customer definition, problem evidence, customer benefit, spokesperson quote, customer quote |
-| `stage-2-external-faq.json` | External FAQ | Question quality, answer completeness, open item handling — *Phase 3* |
-| `stage-2-internal-faq.json` | Internal FAQ | Coverage of engineering/legal/business, open items, blocker flagging — *Phase 3* |
-| `stage-3-requirements.json` | Requirements | Requirement traceability, testable ACs, edge cases, NFRs, open item propagation — *Phase 4* |
-
-**To update a rubric:** edit the JSON file and increment the `version` field. No agent redeployment needed. The version used in each Critic review is recorded in `session.json`.
+| `stage-2-external-faq.json` | External FAQ | Question quality, answer completeness, no evasion, critical concern coverage |
+| `stage-2-internal-faq.json` | Internal FAQ | Stakeholder coverage, answer completeness, blocker identification, no evasion |
+| `stage-3-demo.json` | Visual Demo | PR traceability, user journey coverage, structural runnability, mock data honesty |
+| `stage-4-docs.json` | Documentation | Issuer journey completeness, technical consistency, enterprise docs style, Xfinite specificity, PR/FAQ grounding |
+| `stage-5-requirements.json` | Requirements | Requirement traceability, testable ACs, edge cases, NFRs, open item propagation *(Phase 6)* |
 
 ---
 
 ## Skills
 
-Skills are loaded automatically when Claude Code opens in this directory. You do not need to load them manually.
-
 | Skill | Purpose |
 |---|---|
-| `working-backwards` | Main Orchestrator — `/working-backwards [idea]` |
+| `working-backwards` | Main Orchestrator — `/working-backwards [idea]` or `resume [session-id]` |
 | `wb-status` | Session status — `/wb-status [session-id]` |
-| `github-operations` | Shared gh CLI + git instructions for all agents |
-| `working-backwards-methodology` | Shared Working Backwards reference knowledge |
+| `github-operations` | Shared `gh` CLI + git instructions loaded by all agents |
+| `working-backwards-methodology` | Shared Working Backwards reference knowledge loaded by all agents |
 
 ---
 
 ## Handling edge cases
 
 **"I already have a draft Press Release"**
-Start a session normally and paste your draft when the Press Release Agent asks for context. It will validate against the rubric rather than starting from scratch.
+Start a session normally and paste your draft when the Press Release Agent asks for context. It validates against the rubric rather than starting from scratch.
+
+**"I have existing UI screenshots for the demo"**
+When the Demo Builder Agent asks its upfront questions, share the screenshots. It will match the visual language, layout, and terminology of your existing UI.
 
 **"The Critic keeps failing my Press Release"**
-After 3 revision cycles without a PASS, the pipeline pauses and saves your best draft. The Critic's feedback will tell you specifically what's missing. In most cases, this means you need more customer evidence — talk to 2–3 customers and come back with real data and quotes. Resume with `/working-backwards resume [session-id]`.
+After 3 revision cycles, the pipeline pauses and saves your best draft. The Critic's feedback will tell you exactly what's missing. In most cases it means you need more customer evidence — talk to 2–3 customers and resume with `/working-backwards resume [session-id]`.
 
-**"I want to skip the FAQ and go straight to requirements"**
-The pipeline won't allow this. Stage 2 is locked until Stage 1 passes; Stage 3 is locked until both Stage 2 stages pass. This is intentional — requirements written without a validated PR and FAQ are requirements for the wrong product.
+**"I want to skip a stage"**
+The pipeline won't allow it. Each stage is locked until all prior stages pass the Critic. This is intentional — requirements written without a validated PR, FAQ, demo, and documentation are requirements for the wrong product.
 
 **"Someone edited my session files directly in GitHub"**
-On resume, the Orchestrator detects a conflict between your local state and the remote. It will show you the diff and ask which version to use before proceeding.
-
-**"I need to run this in a different repo"**
-The skills are project-level and run in the `AI-Product-Team` directory. Session outputs are committed to this repo. Support for configuring a separate target repo is planned for Phase 2.
+On resume, the Orchestrator detects the conflict and asks which version to use before proceeding.
 
 ---
 
@@ -345,30 +341,30 @@ The skills are project-level and run in the `AI-Product-Team` directory. Session
 AI-Product-Team/
 ├── .claude/
 │   ├── agents/
-│   │   ├── press-release-writer.md
-│   │   ├── faq-writer.md              (Phase 3)
-│   │   ├── requirements-writer.md     (Phase 4)
-│   │   └── critic.md
+│   │   ├── press-release-writer.md  ← Stage 1
+│   │   ├── faq-writer.md            ← Stage 2
+│   │   ├── demo-builder.md          ← Stage 3
+│   │   ├── docs-writer.md           ← Stage 4
+│   │   ├── requirements-writer.md   ← Stage 5 (Phase 6)
+│   │   └── critic.md                ← All stages
 │   ├── rubrics/
 │   │   ├── stage-1-press-release.json
-│   │   ├── stage-2-external-faq.json  (Phase 3)
-│   │   ├── stage-2-internal-faq.json  (Phase 3)
-│   │   └── stage-3-requirements.json  (Phase 4)
+│   │   ├── stage-2-external-faq.json
+│   │   ├── stage-2-internal-faq.json
+│   │   ├── stage-3-demo.json
+│   │   ├── stage-4-docs.json
+│   │   └── stage-5-requirements.json  ← Phase 6
 │   └── skills/
-│       ├── working-backwards/
-│       │   └── SKILL.md
-│       ├── wb-status/
-│       │   └── SKILL.md
-│       ├── github-operations/
-│       │   └── SKILL.md
-│       └── working-backwards-methodology/
-│           └── SKILL.md
+│       ├── working-backwards/SKILL.md
+│       ├── wb-status/SKILL.md
+│       ├── github-operations/SKILL.md
+│       └── working-backwards-methodology/SKILL.md
 ├── templates/
 │   ├── session.json.template
 │   └── output-formats/
 │       ├── press-release.md.template
-│       ├── faq.md.template            (Phase 3)
-│       └── requirements.md.template   (Phase 4)
+│       ├── faq.md.template
+│       └── requirements.md.template   ← Phase 6
 ├── working-backwards/
 │   └── {session-id}/                  ← created per session
 ├── CLAUDE.md
@@ -378,23 +374,16 @@ AI-Product-Team/
 
 ---
 
-## Prerequisites
-
-- **Claude Code** — [Install Claude Code](https://claude.ai/claude-code)
-- **`gh` CLI** — `brew install gh && gh auth login`
-- **Node.js ≥18 + npm** — required to run the Stage 3 demo app locally (`brew install node`)
-- **Git** — configured with push access to this repo
-
 ## Roadmap
 
-| Phase | What ships |
-|---|---|
-| ✅ Phase 1 | Project skeleton, session management, GitHub persistence, `/wb-status` |
-| ✅ Phase 2 | Press Release Agent, Critic, Stage 1 rubric, full revision loop |
-| ✅ Phase 3 | FAQ Agent (External + Internal), Stage 2 rubrics, full Stage 2 loop |
-| ✅ Phase 4 | Demo Builder Agent — generates a working React + Express app from validated PR + FAQ |
-| ✅ Phase 5 | Documentation Agent — Visa Developer Center-style issuer integration docs |
-| Phase 6 | Requirements Agent, Stage 5 rubric, end-to-end pipeline complete |
+| Phase | Status | What shipped |
+|---|---|---|
+| Phase 1 | ✅ | Project skeleton, session management, GitHub persistence, `/wb-status` |
+| Phase 2 | ✅ | Press Release Agent, Critic, Stage 1 rubric, full revision loop |
+| Phase 3 | ✅ | FAQ Agent (External + Internal), Stage 2 rubrics, full Stage 2 loop |
+| Phase 4 | ✅ | Demo Builder Agent — React + Vite + Express app with screenshot support |
+| Phase 5 | ✅ | Documentation Agent — 10-file Visa Developer Center-style issuer docs |
+| Phase 6 | 🔄 | Requirements Agent, Stage 5 rubric, end-to-end pipeline complete |
 
 ---
 
