@@ -1,36 +1,36 @@
 {
-  "version": "1.0.0",
+  "version": "1.1.0",
   "stage": "docs",
   "dimensions": [
     {
-      "id": "issuer-journey-completeness",
-      "name": "Issuer Integration Journey Completeness",
-      "pass_criteria": "The documentation covers the complete issuer integration journey from first contact to production: product overview, sandbox setup, authentication, core API integration, testing, and going live. An issuer bank developer could follow the docs end-to-end without needing to contact Visa or the product team for basic integration questions.",
-      "fail_criteria": "One or more major integration stages are missing or too thin to be actionable. An issuer developer reading the docs would not know how to authenticate, how to make their first API call, or what the path to production looks like."
+      "id": "audience-journey-completeness",
+      "name": "Audience Journey Completeness",
+      "pass_criteria": "The documentation covers the primary user's complete journey with the product — from first access through core use to any required go-live or production steps. The intended audience (developer, end user, admin, partner) could follow the docs end-to-end without needing to contact the product team for basic questions.",
+      "fail_criteria": "One or more major stages of the user's journey are missing or too thin to be actionable. A reader cannot determine how to get started, how to complete the core task, or what the path to production/active use looks like."
     },
     {
       "id": "technical-internal-consistency",
       "name": "Technical Internal Consistency",
-      "pass_criteria": "API endpoints, request/response field names, error codes, and authentication flows are consistent across all documentation sections. A field named in the integration guide matches the field named in the API reference. Error codes listed in the API reference appear in the error codes table.",
-      "fail_criteria": "Field names, endpoint paths, or authentication details differ between sections. A developer following the integration guide would encounter terms or values that don't match the API reference. The docs feel like they were written independently rather than as a coherent system."
+      "pass_criteria": "Any term, field name, endpoint, setting, or concept that appears in multiple documentation files uses identical naming throughout. A reader following the getting-started guide into the reference docs would not encounter unfamiliar or conflicting names.",
+      "fail_criteria": "One or more terms, field names, or concepts are named differently across files. A reader following from one section to another would encounter inconsistencies that require guessing or backtracking."
     },
     {
-      "id": "visa-developer-style",
-      "name": "Enterprise Developer Documentation Style",
-      "pass_criteria": "The documentation follows the professional enterprise developer docs pattern modelled on Visa Developer Center: clear section hierarchy (Overview → Getting Started → Authentication → Integration Guide → API Reference → Error Codes → Testing → Going Live), sandbox/production distinction, code examples in at least two languages, request/response schemas with field descriptions, and a professional tone appropriate for issuer bank engineering teams.",
-      "fail_criteria": "The documentation reads like an internal wiki or a rough spec rather than a polished developer portal. Missing sandbox/production distinction, no code examples, or API reference lacks field-level documentation. Tone is informal or inconsistent."
+      "id": "format-fit",
+      "name": "Format Fit for Product Type",
+      "pass_criteria": "The documentation format matches the product type. API/integration products have developer portal-style docs (reference, auth, code examples). User-facing applications have task-oriented user guides. Admin/ops tools have setup and operations guides. The file structure is driven by what the audience needs to accomplish, not by a generic template.",
+      "fail_criteria": "The documentation format is mismatched to the product. An API product has no reference documentation. A consumer application has API docs instead of user guides. The structure feels like a template was applied without considering what this specific product and audience actually need."
     },
     {
-      "id": "xfinite-specificity",
-      "name": "Xfinite Card Specificity",
-      "pass_criteria": "The documentation is written specifically for issuers integrating the Xfinite card product into their consumer banking apps. The Xfinite card is named, the cardholder use cases are described from the issuer's perspective, and any Xfinite-specific requirements (card programme rules, branding, cardholder flows) are called out explicitly.",
-      "fail_criteria": "The documentation is generic — it could apply to any card product or banking API. Xfinite-specific context is absent or minimal. An issuer developer would not understand what makes this integration specific to the Xfinite card programme."
+      "id": "product-specificity",
+      "name": "Product Specificity",
+      "pass_criteria": "The documentation is written specifically for this product. The product name, core capabilities, user persona, and key workflows described in the Press Release are all reflected in the documentation. A reader could not mistake this for generic or templated documentation.",
+      "fail_criteria": "The documentation is generic — it could apply to any product of its type. The specific capabilities described in the Press Release are absent or underrepresented. Placeholder product names or capabilities have not been replaced."
     },
     {
       "id": "pr-faq-grounding",
       "name": "Press Release and FAQ Grounding",
-      "pass_criteria": "The documentation reflects the customer benefit and product capabilities described in the validated Press Release. Open items from the Internal FAQ that affect integration (legal, compliance, authentication method) are either resolved in the docs or explicitly flagged as [TBD — pre-launch].",
-      "fail_criteria": "The documentation contradicts or ignores the Press Release. Capabilities described in the PR are absent from the API reference. Internal FAQ blockers that would affect integration are not acknowledged."
+      "pass_criteria": "Every capability documented traces to something established in the Press Release or FAQ. Open items from the Internal FAQ that affect the documentation (e.g. undecided auth method, unresolved compliance requirement) are explicitly marked [TBD — pre-launch] rather than invented or silently omitted.",
+      "fail_criteria": "The documentation describes capabilities or behaviours not established in the PR or FAQ. Or it contradicts the PR. Or Internal FAQ open items that affect the docs are silently resolved with invented details rather than marked [TBD]."
     }
   ]
 }
