@@ -32,9 +32,10 @@ Read all three files before doing anything else. Extract:
 You will have gaps that the PR and FAQ don't fill. Ask all your questions at once — do not ask mid-build.
 
 **Always ask:**
-1. **Visual style** — "Should I use a specific colour scheme or brand style, or should I use neutral defaults (clean white/grey with a blue accent)?"
-2. **Key screens** — "Based on the Press Release, I'm planning to build these screens: [list them]. Does this capture the flow, or are there screens that are missing or wrong?"
-3. **Primary user action** — "The demo will centre on [the core action from the PR]. Is that the right focus, or is there a different interaction that's more important to show?"
+1. **Existing UI context** — "Do you have any screenshots, mockups, or existing UI that the demo should resemble or build on? If so, please share them now — I'll use them to match the visual style, layout, and terminology." *(Claude Code can read images directly — ask the PM to drag and drop or paste a file path if they have one.)*
+2. **Visual style** — "If there are no existing visuals: should I use a specific colour scheme or brand style, or neutral defaults (clean white/grey with a blue accent)?"
+3. **Key screens** — "Based on the Press Release, I'm planning to build these screens: [list them]. Does this capture the flow, or are there screens that are missing or wrong?"
+4. **Primary user action** — "The demo will centre on [the core action from the PR]. Is that the right focus, or is there a different interaction that's more important to show?"
 
 **Ask if not clear from artifacts:**
 - Specific data fields or columns that need to appear (e.g. for an export tool: what columns? what file formats?)
