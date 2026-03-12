@@ -8,16 +8,18 @@ Instead of jumping straight to requirements, Working Backwards forces you to sta
 
 ## What it does
 
-Runs a stage-gated pipeline with four stages:
+Runs a stage-gated pipeline with five stages:
 
 ```
 Stage 1: Press Release     → Who is the customer? What do they get?
 Stage 2: External FAQ      → What would a skeptical customer ask?
 Stage 2: Internal FAQ      → What would engineering and leadership ask?
-Stage 3: Requirements      → Engineer-ready spec derived from the above
+Stage 3: Visual Demo       → A working React + Express app, runnable on localhost
+Stage 4: Documentation     → User-facing docs written as if the product already ships
+Stage 5: Requirements      → Engineer-ready PRD derived from all of the above
 ```
 
-Each stage is reviewed by a **Critic agent** before the next stage unlocks. You cannot write requirements until your Press Release and FAQ have passed. That's the point.
+Each stage is reviewed by a **Critic agent** before the next stage unlocks. You cannot write requirements until your Press Release, FAQ, demo, and documentation have passed. That's the point.
 
 All outputs are committed to GitHub after each stage passes — giving you a complete, version-controlled Working Backwards package for every feature you build.
 
@@ -174,9 +176,33 @@ The hardest questions from engineering, legal, finance, and leadership. Covers f
 
 ---
 
-### Stage 3: Requirements *(coming in Phase 4)*
+### Stage 3: Visual Demo *(coming in Phase 4)*
 
-Translated directly from the validated Press Release and FAQ. Every requirement traces back to the PR or FAQ — nothing invented independently. Open items from the FAQ surface as explicit `[OPEN]` gaps. Engineer-ready, with acceptance criteria in given/when/then format.
+A working React + Express front-end application generated from the validated Press Release and FAQ. Demonstrates the core user journey so stakeholders can see and interact with the product concept before any production code is written.
+
+**Output:** `demo/` directory inside the session folder, containing a self-contained React + Express app.
+
+```bash
+cd working-backwards/{session-id}/demo
+npm install
+npm start   # opens on localhost
+```
+
+The quality of the demo is directly constrained by the quality of the Press Release. A specific PR with a clear user journey produces a genuinely demoable app. If the demo looks wrong, it usually means the PR needs revision.
+
+---
+
+### Stage 4: Documentation *(coming in Phase 5)*
+
+User-facing documentation written as if the product already ships — a getting-started guide and how-to guides. In Working Backwards, writing the user manual before the engineering spec is a forcing function: if you can't explain how to use it, you don't understand what you're building.
+
+**Output:** `docs/` directory inside the session folder.
+
+---
+
+### Stage 5: Requirements *(coming in Phase 6)*
+
+Translated directly from the validated Press Release, FAQ, demo, and documentation. Every requirement traces back to the established customer narrative — nothing invented independently. Open items from the FAQ surface as explicit `[OPEN]` gaps. Engineer-ready, with acceptance criteria in given/when/then format.
 
 ---
 
@@ -190,7 +216,18 @@ working-backwards/
     press-release.md      ← committed when Stage 1 passes the Critic
     faq-external.md       ← committed when Stage 2 External passes
     faq-internal.md       ← committed when Stage 2 Internal passes
-    requirements.md       ← committed when Stage 3 passes
+    demo/                 ← committed when Stage 3 passes the Critic
+      package.json
+      src/
+        App.jsx
+        components/
+      server/
+        index.js
+      README.md           ← npm install && npm start
+    docs/                 ← committed when Stage 4 passes the Critic
+      getting-started.md
+      how-to-guides.md
+    requirements.md       ← committed when Stage 5 passes the Critic
     session.json          ← updated after every agent interaction
 ```
 
@@ -326,15 +363,23 @@ AI-Product-Team/
 
 ---
 
+## Prerequisites
+
+- **Claude Code** — [Install Claude Code](https://claude.ai/claude-code)
+- **`gh` CLI** — `brew install gh && gh auth login`
+- **Node.js ≥18 + npm** — required to run the Stage 3 demo app locally (`brew install node`)
+- **Git** — configured with push access to this repo
+
 ## Roadmap
 
 | Phase | What ships |
 |---|---|
 | ✅ Phase 1 | Project skeleton, session management, GitHub persistence, `/wb-status` |
 | ✅ Phase 2 | Press Release Agent, Critic, Stage 1 rubric, full revision loop |
-| Phase 3 | FAQ Agent (External + Internal), Stage 2 rubrics, full Stage 2 loop |
-| Phase 4 | Requirements Agent, Stage 3 rubric, end-to-end pipeline |
-| Phase 5 | Edge case hardening, observability logging, error surfacing |
+| ✅ Phase 3 | FAQ Agent (External + Internal), Stage 2 rubrics, full Stage 2 loop |
+| Phase 4 | Demo Builder Agent — generates a working React + Express app from validated PR + FAQ |
+| Phase 5 | Documentation Agent — writes user-facing docs before requirements |
+| Phase 6 | Requirements Agent, Stage 5 rubric, end-to-end pipeline complete |
 
 ---
 

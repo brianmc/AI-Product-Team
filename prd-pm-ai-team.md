@@ -266,21 +266,22 @@ The rubrics used by the Critic must be stored as versioned, configurable structu
 ## Scope
 
 ### In Scope
-- Orchestrator with stage-gated Working Backwards pipeline (Stage 1 → 2 → 3)
+- Orchestrator with stage-gated Working Backwards pipeline (Stage 1 → 2 → 3 → 4 → 5)
 - Press Release Agent
 - FAQ Agent (External and Internal modes)
+- Demo Builder Agent — generates a working React + Express app demonstrating the core user journey
+- Documentation Agent — writes user-facing documentation (getting started, how-to guides) as if the product already ships
 - Requirements Agent
 - Critic Agent with stage-specific rubrics
-- Complete Working Backwards output package in markdown: PR + External FAQ + Internal FAQ + Requirements
+- Complete Working Backwards output package: PR + External FAQ + Internal FAQ + Demo app + Docs + Requirements
 - Natural language input — no templates or forms required
 
 ### Out of Scope (Future)
 - Roadmaps, research synthesis, stakeholder communications — the product is Working Backwards, not generic PM tooling
-- Doc system integrations (Notion, Jira, Linear, Confluence) — Phase 2
-- Doc system integrations beyond GitHub (Notion, Confluence, Linear) — Phase 2
-- Per-team rubric customization — Phase 2
-- Analytics and team-level coaching — Phase 3
-- Automated output publishing — Phase 3
+- Doc system integrations beyond GitHub (Notion, Confluence, Linear) — future
+- Per-team rubric customization — future
+- Analytics and team-level coaching — future
+- Automated output publishing — future
 
 ---
 
@@ -326,9 +327,21 @@ The rubrics used by the Critic must be stored as versioned, configurable structu
       press-release.md        ← committed on Stage 1 PASS
       faq-external.md         ← committed on Stage 2 External PASS
       faq-internal.md         ← committed on Stage 2 Internal PASS
-      requirements.md         ← committed on Stage 3 PASS
+      demo/                   ← committed on Stage 3 PASS
+        package.json
+        src/                  ← React front end
+          App.jsx
+          components/
+        server/
+          index.js            ← Express backend with mock data
+        README.md             ← npm install && npm start
+      docs/                   ← committed on Stage 4 PASS
+        getting-started.md
+        how-to-guides.md
+      requirements.md         ← committed on Stage 5 PASS
       session.json            ← updated after every agent interaction
   ```
+- Prerequisites for running the demo: Node.js ≥18 and npm. The Demo Builder agent generates a `README.md` inside `demo/` with exact run instructions.
 - [RESOLVED 2026-03-08] Orchestrator routing: explicit state machine over model-based classifier. A fixed pipeline with known stages maps cleanly to a state machine — simpler, more predictable, easier to debug.
 - [RESOLVED 2026-03-08] GitHub integration: `gh` CLI + `git` over GitHub MCP server. Simpler setup, transparent operations, no additional configuration required beyond `gh auth login`.
 
@@ -341,7 +354,8 @@ The rubrics used by the Critic must be stored as versioned, configurable structu
 - [RESOLVED 2026-03-08] Session persistence — all stage outputs and session state are persisted to a GitHub repository after each Critic PASS. GitHub is the only supported persistence target for v1. PMs must configure a repo and token at session start.
 - [OPEN] First 3 launch teams — who are they? Ideal profile: already familiar with Working Backwards, frustrated by inconsistent execution, has an internal champion.
 - [OPEN] Business model — separate decision, not in scope for this PRD.
-- [RESOLVED 2026-03-08] Methodology scope — strict Working Backwards pipeline (PR → FAQ → Requirements) rather than broader PM tooling. The product is opinionated by design.
+- [RESOLVED 2026-03-11] Phase structure — 5 stages: Press Release → FAQ (External + Internal) → Visual Demo (React + Express app, runnable on localhost) → Documentation (user-facing docs written before requirements) → Requirements (PRD). This aligns with Amazon's full Working Backwards process and ensures requirements are grounded in a demonstrable, documented customer experience.
+- [RESOLVED 2026-03-08] Methodology scope — strict Working Backwards pipeline, not generic PM tooling. The product is opinionated by design.
 - [RESOLVED 2026-03-07] Agent architecture — Orchestrator + specialized agents + Critic review loop, over single-model or generic PM assistant approaches.
 
 ---
