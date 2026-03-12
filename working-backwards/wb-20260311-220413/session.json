@@ -1,10 +1,10 @@
 {
   "session_id": "wb-20260311-220413",
   "created_at": "2026-03-12T05:04:35Z",
-  "updated_at": "2026-03-12T05:20:00Z",
+  "updated_at": "2026-03-12T05:28:00Z",
   "repo": "brianmc/AI-Product-Team",
   "feature_idea": "High Flyer — a web application for high net worth Xfinite affluent credit card holders that suggests hidden speakeasy bars in US cities where cardholders can secure sought-after tables at extremely short notice",
-  "current_stage": "faq-internal",
+  "current_stage": "demo",
   "stages": {
     "press-release": {
       "status": "complete",
@@ -19,13 +19,13 @@
       "artifact_path": "working-backwards/wb-20260311-220413/faq-external.md"
     },
     "faq-internal": {
-      "status": "in-progress",
-      "critic_verdict": null,
+      "status": "complete",
+      "critic_verdict": "PASS",
       "revision_count": 0,
       "artifact_path": "working-backwards/wb-20260311-220413/faq-internal.md"
     },
     "demo": {
-      "status": "pending",
+      "status": "in-progress",
       "critic_verdict": null,
       "revision_count": 0,
       "artifact_path": "working-backwards/wb-20260311-220413/demo/"
