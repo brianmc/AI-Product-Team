@@ -186,26 +186,20 @@ npm start   # opens at http://localhost:3000
 
 ### Stage 4: Documentation
 
-Issuer-facing developer documentation styled after **Visa Developer Center** — written as if the product already ships. Targeted at card issuers integrating the Xfinite card product into their consumer banking apps for cardholders.
+Documentation written as if the product already ships. The Documentation Agent reads the validated Press Release and FAQs to determine who the documentation is for and what format it should take — then produces a complete, professional documentation set.
 
-The Documentation Agent asks about API naming, authentication method (defaults to mTLS), core API operations, sandbox URLs, and compliance requirements before writing.
+The agent determines the appropriate documentation type from the product:
 
-**Output — 10-file documentation set:**
-
-| File | Contents |
+| Product type | Documentation format |
 |---|---|
-| `index.md` | Product overview, capabilities, integration-at-a-glance, sandbox vs production |
-| `getting-started.md` | Prerequisites, sandbox access request, first API call |
-| `authentication.md` | mTLS / OAuth setup with full JS + Python code examples |
-| `integration-guide.md` | Step-by-step primary use case with request/response examples |
-| `api-reference.md` | All endpoints with field-level docs, request/response schemas |
-| `code-examples.md` | Copy-paste-ready examples in cURL, JavaScript, Python |
-| `error-codes.md` | All error codes with HTTP status, description, and resolution |
-| `testing.md` | Sandbox setup, test Xfinite card IDs, scenario checklist |
-| `going-live.md` | Pre-launch checklist, Visa certification, compliance requirements |
-| `faq.md` | Common issuer integration questions |
+| API / integration / SDK | Developer portal style — overview, auth, reference, code examples, error codes, going live |
+| Consumer / business app | User documentation style — getting started, feature guides, troubleshooting, FAQ |
+| Admin / operations tool | Operator documentation style — setup, configuration, operations, monitoring |
+| B2B SaaS | Combination — end-user docs plus admin/integration docs as needed |
 
-**Critic rubric (5 dimensions):** issuer journey completeness, technical internal consistency, enterprise developer docs style, Xfinite card specificity, PR/FAQ grounding.
+The Documentation Agent asks clarifying questions (only what can't be determined from the artifacts) before writing, then confirms the file plan with the PM.
+
+**Critic rubric (5 dimensions):** audience journey completeness, technical internal consistency, format fit for product type, product specificity, PR/FAQ grounding.
 
 ---
 
