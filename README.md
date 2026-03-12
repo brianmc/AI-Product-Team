@@ -1,6 +1,6 @@
 # AI-Product-Team
 
-A Claude Code extension that guides product managers through the customer and outcome focused **Working Backwards** methodology using a multi-agent pipeline.
+A Claude Code extension that guides product managers through the customer and outcome focused **Working Backwards** methodology, using a multi-agent pipeline.
 
 Instead of jumping straight to requirements, Working Backwards forces you to start from the customer: write the Press Release first, stress-test it with hard questions, build and document the experience, specify how you'll measure success — then, and only then, write the engineering spec. This extension makes that process rigorous, structured, and impossible to shortcut.
 
