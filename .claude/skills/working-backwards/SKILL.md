@@ -1,7 +1,7 @@
 ---
 name: working-backwards
-description: Start or resume an Amazon Working Backwards session. Guides the PM through Press Release → External FAQ → Internal FAQ → Visual Demo → Documentation → Telemetry → Requirements, with a Critic review at each stage. All outputs are committed to GitHub.
-argument-hint: "[feature idea] | resume [session-id]"
+description: Start or resume an Amazon Working Backwards session. Guides the PM through Press Release → External FAQ → Internal FAQ → Visual Demo → Documentation → Telemetry → Requirements, with a Critic review at each stage. Saves locally by default; pass --repo org/repo to persist to GitHub.
+argument-hint: "[feature idea] [--repo org/repo] | resume [session-id]"
 allowed-tools: Bash, Read, Write
 skills:
   - github-operations
@@ -12,28 +12,48 @@ skills:
 
 You are the Orchestrator for an Amazon Working Backwards pipeline. Your job is to manage session state, enforce stage sequencing, and route work to the correct agent at each stage.
 
-## Step 1: Verify prerequisites
+Sessions are saved to the local `working-backwards/` directory by default. If the PM passes `--repo org/repo`, artifacts are additionally committed and pushed to that GitHub repository at each stage.
 
-Run the following and stop if either fails:
+---
+
+## Step 1: Parse arguments and determine persistence mode
+
+`$ARGUMENTS` will be one of:
+- A feature idea (free text) → **new session, local persistence**
+- A feature idea followed by `--repo org/repo` → **new session, GitHub persistence**
+- `resume [session-id]` → **resume existing session** (persistence mode read from session.json)
+- Nothing → ask the PM: "What product idea would you like to work backwards from? You can optionally pass `--repo org/repo` to persist outputs to GitHub."
+
+**Extract the `--repo` flag if present:**
+
+Scan `$ARGUMENTS` for a `--repo` token followed by a value matching `org/repo` format. If found:
+- Set `PERSISTENCE_MODE` = `"github"`
+- Set `TARGET_REPO` = the value (e.g. `brianmc/AI-Product-Team`)
+- The feature idea is everything in `$ARGUMENTS` before `--repo`
+
+If `--repo` is not present:
+- Set `PERSISTENCE_MODE` = `"local"`
+- Set `TARGET_REPO` = `null`
+
+---
+
+## Step 2: Verify prerequisites (GitHub mode only)
+
+**Skip this step entirely if `PERSISTENCE_MODE` is `"local"`.**
+
+If `PERSISTENCE_MODE` is `"github"`:
 
 ```bash
 gh auth status
 ```
 
-If not authenticated: "Please run `gh auth login` before starting a Working Backwards session."
+If not authenticated: "Please run `gh auth login` before using GitHub persistence."
 
 ```bash
 git remote get-url origin
 ```
 
-Store the repo (e.g. `brianmc/AI-Product-Team`) — this is where sessions are persisted.
-
-## Step 2: Parse the arguments
-
-`$ARGUMENTS` will be one of:
-- A feature idea (free text) → **new session**
-- `resume [session-id]` → **resume existing session**
-- Nothing → ask the PM: "What product idea would you like to work backwards from?"
+If the current directory is not a git repo, or the remote does not match `TARGET_REPO`: warn the PM and ask them to either run this from within the correct repo, or switch to local mode by removing the `--repo` flag.
 
 ---
 
@@ -41,22 +61,28 @@ Store the repo (e.g. `brianmc/AI-Product-Team`) — this is where sessions are p
 
 ### Step 3a: Initialize the session
 
-Generate a session ID from the current timestamp:
+Generate a session ID:
 ```bash
 echo "wb-$(date +%Y%m%d-%H%M%S)"
 ```
 
-Create the session directory and write `working-backwards/{session-id}/session.json` with:
+Create the session directory:
+```bash
+mkdir -p working-backwards/{session-id}
+```
+
+Write `working-backwards/{session-id}/session.json` with:
 - `session_id`: the generated ID
 - `created_at` / `updated_at`: current ISO timestamp (`date -u +"%Y-%m-%dT%H:%M:%SZ"`)
-- `repo`: the repo from Step 1
-- `feature_idea`: the PM's input from `$ARGUMENTS`
+- `persistence`: `PERSISTENCE_MODE` (`"local"` or `"github"`)
+- `repo`: `TARGET_REPO` (null if local)
+- `feature_idea`: the PM's input
 - `current_stage`: `"press-release"`
 - All stage `artifact_path` values: `"working-backwards/{session-id}/{artifact}.md"`
 - All other fields: as per `templates/session.json.template`
 
+**If `PERSISTENCE_MODE` is `"github"`:**
 ```bash
-mkdir -p working-backwards/{session-id}
 git add working-backwards/{session-id}/session.json
 git commit -m "Working Backwards [{session-id}]: session initialized"
 git push
@@ -64,9 +90,27 @@ git push
 
 ### Step 4a: Show pipeline status and begin Stage 1
 
-Display:
+**If `PERSISTENCE_MODE` is `"local"`:**
 ```
-Session {session-id} initialized and saved to GitHub.
+Session {session-id} initialized. Artifacts will be saved to working-backwards/{session-id}/.
+
+─────────────────────────────────────────
+  WORKING BACKWARDS: {feature_idea}
+  Session: {session-id}
+─────────────────────────────────────────
+  ▶ Stage 1: Press Release        [ IN PROGRESS ]
+    Stage 2: External FAQ         [ PENDING ]
+    Stage 2: Internal FAQ         [ PENDING ]
+    Stage 3: Visual Demo          [ PENDING ]
+    Stage 4: Documentation        [ PENDING ]
+    Stage 5: Telemetry            [ PENDING ]
+    Stage 6: Requirements         [ PENDING ]
+─────────────────────────────────────────
+```
+
+**If `PERSISTENCE_MODE` is `"github"`:**
+```
+Session {session-id} initialized and saved to {TARGET_REPO}.
 
 ─────────────────────────────────────────
   WORKING BACKWARDS: {feature_idea}
@@ -90,18 +134,19 @@ Then proceed to **Stage 1: Press Release loop** below.
 
 ### Step 3b: Read existing session state
 
+Read `working-backwards/{session-id}/session.json` from disk.
+
+Set `PERSISTENCE_MODE` and `TARGET_REPO` from the `persistence` and `repo` fields in session.json.
+
+**If `PERSISTENCE_MODE` is `"github"`:** pull latest state and check for concurrent edits:
 ```bash
 git pull
-cat working-backwards/{session-id}/session.json
-```
-
-Check for concurrent edits:
-```bash
 git fetch origin
 git diff HEAD origin/main -- working-backwards/{session-id}/session.json
 ```
-
 If there is a diff, warn the PM and ask which version to use before proceeding.
+
+**If `PERSISTENCE_MODE` is `"local"`:** no git operations needed — session.json on disk is authoritative.
 
 ### Step 4b: Resume at current stage
 
@@ -115,6 +160,17 @@ Read `current_stage` from `session.json` and route accordingly:
 - `telemetry` → **Stage 5: Telemetry loop**
 - `requirements` → **Stage 6: Requirements loop**
 - All stages `PASS` → display complete package, confirm session is finished
+
+---
+
+## Persistence helper (refer to this throughout)
+
+At each stage, after writing artifacts and updating session.json on disk:
+
+**If `PERSISTENCE_MODE` is `"github"`**, run the commit block shown for that stage.
+**If `PERSISTENCE_MODE` is `"local"`**, skip the git block entirely. Artifacts and session.json are already written to disk.
+
+In all status displays, replace "committed to GitHub" with "saved locally" when `PERSISTENCE_MODE` is `"local"`.
 
 ---
 
@@ -142,14 +198,13 @@ The Critic returns a structured verdict.
 
 **If `VERDICT: PASS`:**
 
-1. Write the artifact:
-   - Write the draft to `working-backwards/{session-id}/press-release.md`
+1. Write the draft to `working-backwards/{session-id}/press-release.md`
 2. Update `session.json`:
    - `stages.press-release.status` → `"complete"`
    - `stages.press-release.critic_verdict` → `"PASS"`
    - `current_stage` → `"faq-external"`
    - `updated_at` → current timestamp
-3. Commit both files:
+3. **If GitHub:** commit:
    ```bash
    git add working-backwards/{session-id}/press-release.md working-backwards/{session-id}/session.json
    git commit -m "Working Backwards [{session-id}]: Stage 1 Press Release - Critic PASS"
@@ -166,23 +221,22 @@ The Critic returns a structured verdict.
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Press Release committed to GitHub.
-   Moving to Stage 2: External FAQ.
+   Press Release saved. Moving to Stage 2: External FAQ.
    ```
 5. Proceed to **Stage 2: External FAQ loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
-1. Read `revision_count` from `session.json` for the `press-release` stage
+1. Read `revision_count` from `session.json` for `press-release`
 2. If `revision_count < 3`:
    - Increment `revision_count` in `session.json`, update `updated_at`
-   - Commit updated `session.json`:
+   - **If GitHub:** commit updated session.json:
      ```bash
      git add working-backwards/{session-id}/session.json
      git commit -m "Working Backwards [{session-id}]: Stage 1 revision {n}"
      git push
      ```
-   - Show the PM the Critic's feedback clearly:
+   - Show the PM the Critic's feedback:
      ```
      The Critic reviewed your Press Release and found issues to address:
 
@@ -193,10 +247,9 @@ The Critic returns a structured verdict.
      ```
    - Return to **Invoke the Press Release Writer** with the current draft + Critic feedback
 3. If `revision_count >= 3`:
-   - Do not loop again
    - Write the best available draft to `working-backwards/{session-id}/press-release.md`
    - Update `session.json` (`updated_at`, save revision count)
-   - Commit:
+   - **If GitHub:** commit:
      ```bash
      git add working-backwards/{session-id}/press-release.md working-backwards/{session-id}/session.json
      git commit -m "Working Backwards [{session-id}]: Stage 1 - max revisions reached, draft saved"
@@ -205,7 +258,7 @@ The Critic returns a structured verdict.
    - Tell the PM:
      ```
      After 3 revision cycles, the Press Release hasn't passed all Critic checks.
-     The current draft has been saved to GitHub.
+     The current draft has been saved.
 
      Unresolved issues:
      [list remaining failing dimensions and their feedback]
@@ -251,7 +304,7 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
    - `stages.faq-external.critic_verdict` → `"PASS"`
    - `current_stage` → `"faq-internal"`
    - `updated_at` → current timestamp
-3. Commit:
+3. **If GitHub:** commit:
    ```bash
    git add working-backwards/{session-id}/faq-external.md working-backwards/{session-id}/session.json
    git commit -m "Working Backwards [{session-id}]: Stage 2 External FAQ - Critic PASS"
@@ -268,8 +321,7 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   External FAQ committed to GitHub.
-   Moving to Stage 2: Internal FAQ.
+   External FAQ saved. Moving to Stage 2: Internal FAQ.
    ```
 5. Proceed to **Stage 2: Internal FAQ loop** below.
 
@@ -277,19 +329,13 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
 
 1. Read `revision_count` from `session.json` for `faq-external`
 2. If `revision_count < 3`:
-   - Increment `revision_count`, update `updated_at`, commit `session.json`
-   - Show the PM the Critic's feedback:
-     ```
-     The Critic reviewed the External FAQ and found issues to address:
-
-     [For each failing dimension:]
-     ❌ {Dimension Name}
-        Issue: {specific issue}
-        Fix:   {concrete suggested revision}
-     ```
+   - Increment `revision_count`, update `updated_at`
+   - **If GitHub:** commit updated session.json
+   - Show the PM the Critic's feedback per failing dimension
    - Return to **Invoke the FAQ Writer (External mode)** with current draft + feedback
 3. If `revision_count >= 3`:
-   - Save best draft to `working-backwards/{session-id}/faq-external.md`, commit, push
+   - Save best draft to `working-backwards/{session-id}/faq-external.md`
+   - **If GitHub:** commit, push
    - Tell the PM what's unresolved and suggest gathering more customer evidence before resuming
 
 ---
@@ -321,9 +367,9 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
 2. Update `session.json`:
    - `stages.faq-internal.status` → `"complete"`
    - `stages.faq-internal.critic_verdict` → `"PASS"`
-   - `current_stage` → `"requirements"`
+   - `current_stage` → `"demo"`
    - `updated_at` → current timestamp
-3. Commit:
+3. **If GitHub:** commit:
    ```bash
    git add working-backwards/{session-id}/faq-internal.md working-backwards/{session-id}/session.json
    git commit -m "Working Backwards [{session-id}]: Stage 2 Internal FAQ - Critic PASS"
@@ -340,8 +386,7 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Internal FAQ committed to GitHub.
-   Moving to Stage 3: Visual Demo.
+   Internal FAQ saved. Moving to Stage 3: Visual Demo.
    ```
 5. Proceed to **Stage 3: Visual Demo loop** below.
 
@@ -349,11 +394,13 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
 
 1. Read `revision_count` from `session.json` for `faq-internal`
 2. If `revision_count < 3`:
-   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Increment `revision_count`, update `updated_at`
+   - **If GitHub:** commit updated session.json
    - Show the PM the Critic's feedback per failing dimension
    - Return to **Invoke the FAQ Writer (Internal mode)** with current draft + feedback
 3. If `revision_count >= 3`:
-   - Save best draft to `working-backwards/{session-id}/faq-internal.md`, commit, push
+   - Save best draft to `working-backwards/{session-id}/faq-internal.md`
+   - **If GitHub:** commit, push
    - Tell the PM what's unresolved (typically: missing stakeholder coverage or unowned open items) and suggest resolving blockers with the relevant team before resuming
 
 ---
@@ -391,7 +438,7 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
    - `stages.demo.critic_verdict` → `"PASS"`
    - `current_stage` → `"docs"`
    - `updated_at` → current timestamp
-3. Commit the entire demo directory and updated session.json:
+3. **If GitHub:** commit:
    ```bash
    git add working-backwards/{session-id}/demo/ working-backwards/{session-id}/session.json
    git commit -m "Working Backwards [{session-id}]: Stage 3 Visual Demo - Critic PASS"
@@ -408,7 +455,7 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Demo committed to GitHub.
+   Demo saved.
 
    To run the demo:
      cd working-backwards/{session-id}/demo
@@ -425,7 +472,8 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
 
 1. Read `revision_count` from `session.json` for `demo`
 2. If `revision_count < 3`:
-   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Increment `revision_count`, update `updated_at`
+   - **If GitHub:** commit updated session.json
    - Show the PM the Critic's feedback per failing dimension:
      ```
      The Critic reviewed the demo and found issues to address:
@@ -438,7 +486,7 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
    - Return to **Invoke the Demo Builder** with the current demo files + Critic feedback
    - The Demo Builder fixes only the failing dimensions — it does not rebuild from scratch
 3. If `revision_count >= 3`:
-   - Commit whatever exists in the demo directory as-is, push
+   - **If GitHub:** commit whatever exists in the demo directory as-is, push
    - Tell the PM which Critic dimensions remain unresolved and what to address before resuming
 
 ---
@@ -476,7 +524,7 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
    - `stages.docs.critic_verdict` → `"PASS"`
    - `current_stage` → `"telemetry"`
    - `updated_at` → current timestamp
-2. Commit the entire docs directory and updated session.json:
+2. **If GitHub:** commit:
    ```bash
    git add working-backwards/{session-id}/docs/ working-backwards/{session-id}/session.json
    git commit -m "Working Backwards [{session-id}]: Stage 4 Documentation - Critic PASS"
@@ -493,8 +541,7 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
      ▶ Stage 5: Telemetry            [ IN PROGRESS ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Documentation committed to GitHub.
-   Moving to Stage 5: Telemetry.
+   Documentation saved. Moving to Stage 5: Telemetry.
    ```
 4. Proceed to **Stage 5: Telemetry loop** below.
 
@@ -502,12 +549,13 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
 
 1. Read `revision_count` from `session.json` for `docs`
 2. If `revision_count < 3`:
-   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Increment `revision_count`, update `updated_at`
+   - **If GitHub:** commit updated session.json
    - Show the PM the Critic's feedback per failing dimension
    - Return to **Invoke the Documentation Writer** with current docs + Critic feedback
    - The docs-writer fixes only the failing dimensions — it does not rewrite the full set
 3. If `revision_count >= 3`:
-   - Commit whatever exists in the docs directory as-is, push
+   - **If GitHub:** commit whatever exists in the docs directory as-is, push
    - Tell the PM which dimensions remain unresolved. Most common: internal consistency failures (field names differ between sections) or documentation that doesn't match the product type described in the Press Release
 
 ---
@@ -545,7 +593,7 @@ Once the `telemetry-writer` returns, use the Agent tool to delegate to the `crit
    - `stages.telemetry.critic_verdict` → `"PASS"`
    - `current_stage` → `"requirements"`
    - `updated_at` → current timestamp
-2. Commit the telemetry spec and updated session.json:
+2. **If GitHub:** commit:
    ```bash
    git add working-backwards/{session-id}/telemetry.md working-backwards/{session-id}/session.json
    git commit -m "Working Backwards [{session-id}]: Stage 5 Telemetry - Critic PASS"
@@ -562,8 +610,7 @@ Once the `telemetry-writer` returns, use the Agent tool to delegate to the `crit
      ✓ Stage 5: Telemetry            [ PASS ]
      ▶ Stage 6: Requirements         [ IN PROGRESS ]
    ─────────────────────────────────────────
-   Telemetry spec committed to GitHub.
-   Moving to Stage 6: Requirements — the final stage.
+   Telemetry spec saved. Moving to Stage 6: Requirements — the final stage.
    ```
 4. Proceed to **Stage 6: Requirements loop** below.
 
@@ -571,7 +618,8 @@ Once the `telemetry-writer` returns, use the Agent tool to delegate to the `crit
 
 1. Read `revision_count` from `session.json` for `telemetry`
 2. If `revision_count < 3`:
-   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Increment `revision_count`, update `updated_at`
+   - **If GitHub:** commit updated session.json
    - Show the PM the Critic's feedback per failing dimension:
      ```
      The Critic reviewed the telemetry spec and found issues to address:
@@ -584,7 +632,7 @@ Once the `telemetry-writer` returns, use the Agent tool to delegate to the `crit
    - Return to **Invoke the Telemetry Writer** with the current draft + Critic feedback
    - The telemetry-writer fixes only the failing dimensions — it does not rewrite from scratch
 3. If `revision_count >= 3`:
-   - Commit whatever exists as `telemetry.md`, push
+   - **If GitHub:** commit whatever exists as `telemetry.md`, push
    - Tell the PM which dimensions remain unresolved. Most common: metrics not tied to PR outcomes, missing instrumentation requirements, or vague activation event definition
 
 ---
@@ -623,7 +671,7 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
    - `stages.requirements.critic_verdict` → `"PASS"`
    - `current_stage` → `"complete"`
    - `updated_at` → current timestamp
-2. Commit the requirements and updated session.json:
+2. **If GitHub:** commit:
    ```bash
    git add working-backwards/{session-id}/requirements.md working-backwards/{session-id}/session.json
    git commit -m "Working Backwards [{session-id}]: Stage 6 Requirements - Critic PASS"
@@ -641,9 +689,8 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
      ✓ Stage 6: Requirements         [ PASS ]
    ─────────────────────────────────────────
    Working Backwards session complete.
-   All artifacts committed to GitHub.
 
-   Your Working Backwards package:
+   Your Working Backwards package (working-backwards/{session-id}/):
      ✓ press-release.md      — validated customer narrative
      ✓ faq-external.md       — customer Q&A
      ✓ faq-internal.md       — engineering & leadership Q&A
@@ -651,15 +698,17 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
      ✓ docs/                 — user-facing documentation
      ✓ telemetry.md          — measurement & instrumentation spec
      ✓ requirements.md       — engineer-ready requirements
+   ```
+   If GitHub mode, append: `All artifacts committed to {TARGET_REPO}.`
 
    [If any [OPEN] or [BLOCKER] items were surfaced in requirements.md, list them here so the PM sees them before closing the session.]
-   ```
 
 **If `VERDICT: NEEDS REVISION`:**
 
 1. Read `revision_count` from `session.json` for `requirements`
 2. If `revision_count < 3`:
-   - Increment `revision_count`, update `updated_at`, commit `session.json`
+   - Increment `revision_count`, update `updated_at`
+   - **If GitHub:** commit updated session.json
    - Show the PM the Critic's feedback per failing dimension:
      ```
      The Critic reviewed the requirements and found issues to address:
@@ -672,7 +721,7 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
    - Return to **Invoke the Requirements Writer** with the current draft + Critic feedback
    - The requirements-writer fixes only the failing dimensions — it does not rewrite from scratch
 3. If `revision_count >= 3`:
-   - Commit whatever exists as `requirements.md`, push
+   - **If GitHub:** commit whatever exists as `requirements.md`, push
    - Tell the PM which dimensions remain unresolved. Most common: acceptance criteria that aren't testable, or `[OPEN]` items from the FAQ that haven't been surfaced in the requirements
 
 ---

@@ -2,7 +2,8 @@
   "session_id": "",
   "created_at": "",
   "updated_at": "",
-  "repo": "",
+  "persistence": "local",
+  "repo": null,
   "feature_idea": "",
   "current_stage": "press-release",
   "stages": {
