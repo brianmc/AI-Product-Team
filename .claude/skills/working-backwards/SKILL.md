@@ -210,7 +210,10 @@ The Critic returns a structured verdict.
    git commit -m "Working Backwards [{session-id}]: Stage 1 Press Release - Critic PASS"
    git push
    ```
-4. Display to the PM:
+4. Invoke the `site-builder` agent. Pass:
+   - Session directory: `working-backwards/{session-id}/`
+   - Stage: `"press-release"`
+5. Display to the PM:
    ```
    ─────────────────────────────────────────
      ✓ Stage 1: Press Release        [ PASS ]
@@ -221,9 +224,16 @@ The Critic returns a structured verdict.
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Press Release saved. Moving to Stage 2: External FAQ.
+   Press Release saved and published to site.
+
+   To preview the site:
+     cd working-backwards/{session-id}/site
+     npm install && npm run dev
+     Opens at http://localhost:5173
+
+   Moving to Stage 2: External FAQ.
    ```
-5. Proceed to **Stage 2: External FAQ loop** below.
+6. Proceed to **Stage 2: External FAQ loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -310,7 +320,10 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
    git commit -m "Working Backwards [{session-id}]: Stage 2 External FAQ - Critic PASS"
    git push
    ```
-4. Display:
+4. Invoke the `site-builder` agent. Pass:
+   - Session directory: `working-backwards/{session-id}/`
+   - Stage: `"faq-external"`
+5. Display:
    ```
    ─────────────────────────────────────────
      ✓ Stage 1: Press Release        [ PASS ]
@@ -321,9 +334,9 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   External FAQ saved. Moving to Stage 2: Internal FAQ.
+   External FAQ saved and published to site. Moving to Stage 2: Internal FAQ.
    ```
-5. Proceed to **Stage 2: Internal FAQ loop** below.
+6. Proceed to **Stage 2: Internal FAQ loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -375,7 +388,10 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
    git commit -m "Working Backwards [{session-id}]: Stage 2 Internal FAQ - Critic PASS"
    git push
    ```
-4. Display:
+4. Invoke the `site-builder` agent. Pass:
+   - Session directory: `working-backwards/{session-id}/`
+   - Stage: `"faq-internal"`
+5. Display:
    ```
    ─────────────────────────────────────────
      ✓ Stage 1: Press Release        [ PASS ]
@@ -386,9 +402,9 @@ Use the Agent tool to delegate to the `critic` agent. Pass:
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Internal FAQ saved. Moving to Stage 3: Visual Demo.
+   Internal FAQ saved and published to site. Moving to Stage 3: Visual Demo.
    ```
-5. Proceed to **Stage 3: Visual Demo loop** below.
+6. Proceed to **Stage 3: Visual Demo loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -444,7 +460,10 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
    git commit -m "Working Backwards [{session-id}]: Stage 3 Visual Demo - Critic PASS"
    git push
    ```
-4. Display:
+4. Invoke the `site-builder` agent. Pass:
+   - Session directory: `working-backwards/{session-id}/`
+   - Stage: `"demo"`
+5. Display:
    ```
    ─────────────────────────────────────────
      ✓ Stage 1: Press Release        [ PASS ]
@@ -455,18 +474,17 @@ Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` 
        Stage 5: Telemetry            [ PENDING ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Demo saved.
+   Demo saved. Demo link added to site.
 
    To run the demo:
      cd working-backwards/{session-id}/demo
      npm install
      npm start
-
-   Opens at http://localhost:3000
+     Opens at http://localhost:3000
 
    Moving to Stage 4: Documentation.
    ```
-5. Proceed to **Stage 4: Documentation loop** below.
+6. Proceed to **Stage 4: Documentation loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -530,7 +548,10 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
    git commit -m "Working Backwards [{session-id}]: Stage 4 Documentation - Critic PASS"
    git push
    ```
-3. Display:
+3. Invoke the `site-builder` agent. Pass:
+   - Session directory: `working-backwards/{session-id}/`
+   - Stage: `"docs"`
+4. Display:
    ```
    ─────────────────────────────────────────
      ✓ Stage 1: Press Release        [ PASS ]
@@ -541,9 +562,9 @@ Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` a
      ▶ Stage 5: Telemetry            [ IN PROGRESS ]
        Stage 6: Requirements         [ PENDING ]
    ─────────────────────────────────────────
-   Documentation saved. Moving to Stage 5: Telemetry.
+   Documentation saved and published to site. Moving to Stage 5: Telemetry.
    ```
-4. Proceed to **Stage 5: Telemetry loop** below.
+5. Proceed to **Stage 5: Telemetry loop** below.
 
 **If `VERDICT: NEEDS REVISION`:**
 
@@ -694,10 +715,11 @@ Once the `requirements-writer` returns, use the Agent tool to delegate to the `c
      ✓ press-release.md      — validated customer narrative
      ✓ faq-external.md       — customer Q&A
      ✓ faq-internal.md       — engineering & leadership Q&A
-     ✓ demo/                 — working prototype (npm install && npm start)
+     ✓ demo/                 — working prototype (npm install && npm start → localhost:3000)
      ✓ docs/                 — user-facing documentation
      ✓ telemetry.md          — measurement & instrumentation spec
      ✓ requirements.md       — engineer-ready requirements
+     ✓ site/                 — marketing-ready website (npm install && npm run dev → localhost:5173)
    ```
    If GitHub mode, append: `All artifacts committed to {TARGET_REPO}.`
 
