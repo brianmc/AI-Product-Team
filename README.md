@@ -22,6 +22,8 @@ Stage 6: Requirements      → Engineer-ready PRD derived from all of the above
 
 Each stage is reviewed by a **Critic agent** before the next stage unlocks. You cannot write requirements until your Press Release, FAQ, demo, documentation, and measurement plan have all passed. That's the point.
 
+After each Critic PASS for Stages 1–4, a **marketing-ready website** (`site/`) is automatically built and updated inside the session directory. It builds progressively — starting with the Press Release and expanding as FAQs, demo, and docs are validated. Run it locally at any point with `npm install && npm run dev` from the `site/` directory.
+
 Sessions are saved locally by default. Pass `--repo org/repo` to also commit and push artifacts to GitHub after each stage.
 
 ---
@@ -281,6 +283,7 @@ working-backwards/
       ...
     telemetry.md            ← saved on Stage 5 Critic PASS
     requirements.md         ← saved on Stage 6 Critic PASS
+    site/                   ← built at Stage 1, updated through Stage 4 (npm install && npm run dev → localhost:5173)
     session.json            ← updated after every agent interaction
 ```
 
@@ -321,6 +324,7 @@ working-backwards/
 | `telemetry-writer` | Derives measurement plan from validated artifacts, produces instrumentation spec | Stage 5 |
 | `requirements-writer` | Translates all validated artifacts into engineer-ready requirements | Stage 6 |
 | `critic` | Reviews every stage output against a versioned, stage-specific rubric | All stages |
+| `site-builder` | Builds and progressively updates a marketing-ready website from validated artifacts | Stages 1–4 |
 
 Agents live in `.claude/agents/`. They are invoked by the Orchestrator — you never call them directly.
 
@@ -429,6 +433,7 @@ AI-Product-Team/
 | Phase 6 | ✅ | Requirements Agent, Stage 6 rubric, end-to-end pipeline complete |
 | Phase 7 | ✅ | Telemetry Agent — measurement spec stage between docs and requirements |
 | Phase 8 | ✅ | Local-first persistence — sessions save locally by default, GitHub opt-in via `--repo` |
+| Phase 9 | ✅ | Site Builder Agent — marketing-ready website built progressively after each Stage 1–4 Critic PASS |
 
 ---
 
