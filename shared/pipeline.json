@@ -1,0 +1,96 @@
+{
+  "version": "0.1.0",
+  "name": "working-backwards-pipeline",
+  "description": "Runtime-neutral Working Backwards pipeline for AI-Product-Team.",
+  "max_revisions_per_stage": 3,
+  "persistence": {
+    "default": "local",
+    "optional": ["github"],
+    "session_root": "working-backwards/{session_id}"
+  },
+  "gate_rule": {
+    "type": "critic-pass-required",
+    "description": "A stage cannot advance until the Critic returns VERDICT: PASS, except when max revisions are reached and the session pauses for more evidence."
+  },
+  "stages": [
+    {
+      "id": "press-release",
+      "label": "Press Release",
+      "agent": "press-release-writer",
+      "critic_rubric": "stage-1-press-release.json",
+      "artifact": "press-release.md",
+      "publishes_to_site": true
+    },
+    {
+      "id": "faq-external",
+      "label": "External FAQ",
+      "agent": "faq-writer",
+      "agent_mode": "external",
+      "critic_rubric": "stage-2-external-faq.json",
+      "artifact": "faq-external.md",
+      "publishes_to_site": true
+    },
+    {
+      "id": "faq-internal",
+      "label": "Internal FAQ",
+      "agent": "faq-writer",
+      "agent_mode": "internal",
+      "critic_rubric": "stage-2-internal-faq.json",
+      "artifact": "faq-internal.md",
+      "publishes_to_site": true
+    },
+    {
+      "id": "demo",
+      "label": "Visual Demo",
+      "agent": "demo-builder",
+      "critic_rubric": "stage-3-demo.json",
+      "artifact": "demo/",
+      "publishes_to_site": true
+    },
+    {
+      "id": "docs",
+      "label": "Documentation",
+      "agent": "docs-writer",
+      "critic_rubric": "stage-4-docs.json",
+      "artifact": "docs/",
+      "publishes_to_site": true
+    },
+    {
+      "id": "telemetry",
+      "label": "Telemetry",
+      "agent": "telemetry-writer",
+      "critic_rubric": "stage-5-telemetry.json",
+      "artifact": "telemetry.md",
+      "publishes_to_site": false
+    },
+    {
+      "id": "requirements",
+      "label": "Requirements",
+      "agent": "requirements-writer",
+      "critic_rubric": "stage-5-requirements.json",
+      "artifact": "requirements.md",
+      "publishes_to_site": false
+    }
+  ],
+  "required_session_artifacts": [
+    "session.json",
+    "press-release.md",
+    "faq-external.md",
+    "faq-internal.md",
+    "demo/",
+    "docs/",
+    "telemetry.md",
+    "requirements.md",
+    "site/"
+  ],
+  "supported_runtimes": [
+    {
+      "id": "claude-code",
+      "adapter_root": ".claude"
+    },
+    {
+      "id": "codex",
+      "adapter_root": ".codex"
+    }
+  ]
+}
