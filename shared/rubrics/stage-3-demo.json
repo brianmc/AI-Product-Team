@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "stage": "demo",
+  "dimensions": [
+    {
+      "id": "pr-traceability",
+      "name": "Press Release Traceability",
+      "pass_criteria": "A stakeholder who has read the Press Release can use the demo and immediately recognize the product. The core customer, problem, and solution are visible in the app.",
+      "fail_criteria": "The demo looks generic. The specific customer persona, problem, or benefit from the Press Release is not evident."
+    },
+    {
+      "id": "user-journey-coverage",
+      "name": "Core User Journey Coverage",
+      "pass_criteria": "The demo implements the primary user journey end-to-end: entry point, core action, and outcome.",
+      "fail_criteria": "The demo shows isolated screens or stops before the user reaches the outcome described in the Press Release."
+    },
+    {
+      "id": "runnability",
+      "name": "Structural Runnability",
+      "pass_criteria": "All imported components, modules, and files exist. npm dependencies are real packages. Vite config and package scripts are syntactically correct.",
+      "fail_criteria": "Imports reference missing files, dependencies are fabricated or misspelled, scripts are malformed, or syntax errors would prevent loading."
+    },
+    {
+      "id": "mock-data-honesty",
+      "name": "Mock Data Honesty",
+      "pass_criteria": "All data shown is clearly mock data or labelled as demo data. The demo does not imply real backend integration it does not have.",
+      "fail_criteria": "Mock data is presented in a way that could mislead stakeholders about what is actually built."
+    }
+  ]
+}
