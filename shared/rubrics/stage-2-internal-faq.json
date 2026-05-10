@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "stage": "faq-internal",
+  "dimensions": [
+    {
+      "id": "coverage",
+      "name": "Stakeholder Coverage",
+      "pass_criteria": "The FAQ includes hard questions from at least three stakeholder perspectives: engineering, business/leadership, and legal/compliance when applicable.",
+      "fail_criteria": "One or more stakeholder perspectives are absent or represented only by softball questions."
+    },
+    {
+      "id": "answer-completeness",
+      "name": "Answer Completeness",
+      "pass_criteria": "Every question has either a substantive answer or is explicitly marked [OPEN - owner: X] with a named owner.",
+      "fail_criteria": "One or more questions are unanswered without [OPEN] marking, or open items have no named owner."
+    },
+    {
+      "id": "blocker-flagging",
+      "name": "Blocker Identification",
+      "pass_criteria": "Any open item that would prevent the build from proceeding is flagged as [BLOCKER - owner: X].",
+      "fail_criteria": "Build-blocking issues are buried in [OPEN] items without distinction or are not surfaced."
+    },
+    {
+      "id": "evasion",
+      "name": "No Evasive Answers",
+      "pass_criteria": "Answers to hard questions are direct. Unknowns are marked [OPEN] rather than obscured with confident-sounding language.",
+      "fail_criteria": "Hard questions receive vague, aspirational, or deflecting answers rather than honest responses or [OPEN] flags."
+    }
+  ]
+}
