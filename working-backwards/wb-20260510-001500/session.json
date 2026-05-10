@@ -1,0 +1,63 @@
+{
+  "session_id": "wb-20260510-001500",
+  "created_at": "2026-05-10T00:15:00Z",
+  "updated_at": "2026-05-10T00:15:00Z",
+  "persistence": "github",
+  "repo": "brianmc/AI-Product-Team",
+  "runtime": "codex",
+  "feature_idea": "Make AI-Product-Team work in both Codex and Claude Code from one shared Working Backwards core.",
+  "current_stage": "press-release",
+  "stages": {
+    "press-release": {
+      "status": "in-progress",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260510-001500/press-release.md"
+    },
+    "faq-external": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260510-001500/faq-external.md"
+    },
+    "faq-internal": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260510-001500/faq-internal.md"
+    },
+    "demo": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260510-001500/demo/"
+    },
+    "docs": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260510-001500/docs/"
+    },
+    "telemetry": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260510-001500/telemetry.md"
+    },
+    "requirements": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260510-001500/requirements.md"
+    }
+  },
+  "invocation_log": [
+    {
+      "runtime": "codex",
+      "agent": "orchestrator",
+      "stage": "press-release",
+      "event": "session_initialized",
+      "timestamp": "2026-05-10T00:15:00Z"
+    }
+  ]
+}
