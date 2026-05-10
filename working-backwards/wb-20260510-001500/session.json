@@ -1,12 +1,12 @@
 {
   "session_id": "wb-20260510-001500",
   "created_at": "2026-05-10T00:15:00Z",
-  "updated_at": "2026-05-10T00:22:00Z",
+  "updated_at": "2026-05-10T00:34:00Z",
   "persistence": "github",
   "repo": "brianmc/AI-Product-Team",
   "runtime": "codex",
   "feature_idea": "Make AI-Product-Team work in both Codex and Claude Code from one shared Working Backwards core.",
-  "current_stage": "faq-external",
+  "current_stage": "faq-internal",
   "stages": {
     "press-release": {
       "status": "complete",
@@ -15,13 +15,13 @@
       "artifact_path": "working-backwards/wb-20260510-001500/press-release.md"
     },
     "faq-external": {
-      "status": "in-progress",
-      "critic_verdict": null,
+      "status": "complete",
+      "critic_verdict": "PASS",
       "revision_count": 0,
       "artifact_path": "working-backwards/wb-20260510-001500/faq-external.md"
     },
     "faq-internal": {
-      "status": "pending",
+      "status": "in-progress",
       "critic_verdict": null,
       "revision_count": 0,
       "artifact_path": "working-backwards/wb-20260510-001500/faq-internal.md"
@@ -73,6 +73,21 @@
       "event": "critic_pass",
       "rubric_version": "1.0.0",
       "timestamp": "2026-05-10T00:22:00Z"
+    },
+    {
+      "runtime": "codex",
+      "agent": "faq-writer",
+      "stage": "faq-external",
+      "event": "artifact_created",
+      "timestamp": "2026-05-10T00:31:00Z"
+    },
+    {
+      "runtime": "codex",
+      "agent": "critic",
+      "stage": "faq-external",
+      "event": "critic_pass",
+      "rubric_version": "1.0.0",
+      "timestamp": "2026-05-10T00:34:00Z"
     }
   ]
 }
