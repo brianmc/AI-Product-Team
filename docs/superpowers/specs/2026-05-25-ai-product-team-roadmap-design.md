@@ -37,15 +37,33 @@ framing is layered in where it is cheap (mostly documentation byproducts).
 
 ## 3. Current state (baseline)
 
-- Orchestrator (`/working-backwards`) runs an explicit state machine enforcing
-  Press Release → External FAQ → Internal FAQ → Requirements.
-- Worker subagents: `press-release-writer`, `faq-writer` (External/Internal).
-  `critic` grades against versioned JSON rubrics in `.claude/rubrics/`.
-- Persistence via `gh`/`git`: `session.json` + Markdown artifacts under
-  `working-backwards/{session-id}/`.
-- **Gaps:** no `requirements-writer` agent; Stage 3 is not wired into the
-  orchestrator; resume is only implemented for Stage 1. (PRD's "Phase 4".)
-- **AI-Product-Knowledge** is effectively empty (LICENSE + README only).
+The pipeline is **fully operational** across six stages and eight agents.
+
+**Stages:**
+```
+Stage 1: Press Release
+Stage 2: External FAQ + Internal FAQ
+Stage 3: Visual Demo  (React + Express, runnable on localhost)
+Stage 4: Documentation  (user guide or API docs)
+Stage 5: Telemetry  (measurement spec + instrumentation requirements)
+Stage 6: Requirements  (engineer-ready PRD)
+```
+Each stage requires a Critic PASS before the next unlocks.
+
+**Agents:** `press-release-writer`, `faq-writer` (External/Internal),
+`demo-builder`, `docs-writer`, `telemetry-writer`, `requirements-writer`,
+`critic`, `site-builder`.
+
+**Persistence:** local-first by default (`session.json` + artifacts under
+`working-backwards/{session-id}/`); GitHub opt-in via `--repo org/repo`.
+
+**site-builder:** auto-builds a marketing-ready website (`site/`) inside the
+session directory after each Stage 1–4 Critic PASS — builds progressively,
+viewable locally via Vite at localhost:5173.
+
+**Rubrics:** versioned JSON in `.claude/rubrics/` for all six stages.
+
+**AI-Product-Knowledge** is effectively empty (LICENSE + README only).
 
 ## 4. Key decisions (resolved)
 
@@ -54,7 +72,7 @@ framing is layered in where it is cheap (mostly documentation byproducts).
 | Primary emphasis | Production tool first; showcase where cheap | User direction |
 | Single source of truth for agent logic | **Plugin format** (skills/agents/rubrics) | Runs in CLI + Cowork as-is; least rework |
 | When to adopt Managed Agents | **Later**, only to power the hosted web/API surface | Avoids re-platforming before it's needed |
-| Build order | 0 → A → B as critical path; C, D after; E cross-cutting | Finish the core, then compound value |
+| Build order | A → B as critical path; C, D after; E cross-cutting | Core pipeline is complete; compound value next |
 | Documentation | **README updated at every phase** (standing requirement) | User direction |
 
 ## 5. Target architecture (end state)
@@ -84,16 +102,6 @@ directly. The web surface (Phase D) calls a Managed Agents deployment (Phase C)
 that reuses the same versioned rubrics and prompts.
 
 ## 6. The roadmap
-
-### Phase 0 — Finish the core pipeline *(prerequisite)*
-A production tool must deliver its full advertised package.
-- Build `requirements-writer` agent.
-- Add Stage 3 Requirements rubric (`.claude/rubrics/stage-3-requirements.json`).
-- Wire Stage 3 into the orchestrator loop (the PR's "Phase 4").
-- Implement resume for `faq-external`, `faq-internal`, `requirements`.
-- **README:** document the now-complete 4-stage pipeline + Stage 3 usage.
-- Effort/Risk: **Low / Low.** No new external tech.
-- Showcase: — (completeness).
 
 ### Phase A — Organizational Product Memory *(keystone)*
 Wire **AI-Product-Knowledge** in as the persistent memory layer via the memory
@@ -149,8 +157,8 @@ it" note. Produced as a byproduct, not a separate build.
 - Maintain a top-level mapping (see §8) of feature → capability → demo path.
 - Effort/Risk: **Low / Low.**
 
-**Critical path:** 0 → A → B yields a complete, memory-backed, PM-usable
-production tool. C and D extend to web/enterprise and can wait.
+**Critical path:** A → B yields a memory-backed, PM-usable production tool
+across all current surfaces. C and D extend to web/enterprise and can wait.
 
 ## 7. The compounding-knowledge loop (core narrative)
 
@@ -199,8 +207,8 @@ canonical example of Claude memory in this product.
 
 This roadmap decomposes into independent per-phase efforts. Each phase gets its
 own spec → implementation plan → build. The immediate next step is to write the
-implementation plan for **Phase 0 (finish the core pipeline)**, the prerequisite
-on the critical path.
+implementation plan for **Phase A (Organizational Product Memory)**, the keystone
+of the roadmap.
 
 ## 12. References
 
