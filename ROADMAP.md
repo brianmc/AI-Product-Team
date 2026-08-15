@@ -1,38 +1,37 @@
 # Roadmap
 
-This roadmap focuses on making AI-Product-Team a dual-runtime Working Backwards product for Claude Code and Codex.
+This roadmap focuses first on making AI-Product-Team a model-, provider-, and runtime-neutral Working Backwards product.
 
-## Now: Dual-Runtime Foundation
+## Now: Portability Foundation
 
-### 1. Shared Core
+### 1. Portable Product Contract
 
-Create a runtime-neutral source of truth for the Working Backwards pipeline.
+Maintain one source of truth that does not select a model or provider and can be executed by any compatible host.
 
 Deliverables:
 
 - `shared/pipeline.json`
+- `shared/runtime-contract.json`
+- `shared/roles.md`
 - `shared/README.md`
-- Shared locations for methodology, rubrics, templates, and agent roles
-- Compatibility contract for session artifacts
+- Shared methodology, rubrics, templates, and role definitions
+- Compatibility contract for session artifacts and Critic verdicts
+- Contract validation in local checks and CI
 
-### 2. Codex Adapter
+### 2. Host Adapters
 
-Add Codex-native instructions that can run the same pipeline without depending on Claude Code conventions.
+Keep host-specific instructions thin and make the same pipeline available in Codex CLI, the Codex app, Claude Code, and Claude Cowork.
 
 Deliverables:
 
 - `AGENTS.md`
 - `.codex/skills/working-backwards/SKILL.md`
 - `.codex/skills/wb-status/SKILL.md`
+- `.claude/` execution instructions
+- `.claude-plugin/plugin.json` packaging for Claude Code and Cowork
+- A runtime support matrix with installation and verification guidance
 
-### 3. Claude Adapter Preservation
-
-Keep the existing Claude Code extension working while reducing duplication over time.
-
-Deliverables:
-
-- Existing `.claude/` behavior remains intact
-- Future refactor plan for pointing `.claude/` files at `shared/`
+No new product features will be added until all four adapters run the same contract successfully.
 
 ## Next: Product Truth Refresh
 

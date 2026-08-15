@@ -1,20 +1,20 @@
 # Shared Working Backwards Core
 
-This directory contains runtime-neutral product definitions for AI-Product-Team.
+This directory contains provider- and runtime-neutral product definitions for AI-Product-Team.
 
-Claude Code and Codex adapters should both consume this shared core rather than redefining the Working Backwards process independently.
+Every adapter must consume this core rather than redefining the Working Backwards process independently. The core must not name or require a particular model, model provider, agent framework, or tool API.
 
 ## Contents
 
 - `pipeline.json` - canonical stage order, artifact names, gate rules, and runtime compatibility expectations.
+- `runtime-contract.json` - portability guarantees and the minimum capabilities an adapter must provide.
+- `roles.md` - runtime-neutral responsibilities, inputs, outputs, and guardrails for every pipeline role.
 
-Planned shared directories:
+Shared directories:
 
-- `agents/` - runtime-neutral role definitions for each stage agent.
 - `methodology/` - Working Backwards reference material.
 - `rubrics/` - Critic rubrics used by every runtime.
-- `templates/` - output and session templates.
 
 ## Rule
 
-If a behavior affects the product process, define it here first. Runtime-specific adapters may explain how to execute the behavior in Claude Code or Codex, but they should not invent different stage semantics.
+If a behavior affects the product process, define it here first. Runtime-specific adapters may explain how to execute it with their host's tools, but they must not invent different stage semantics, select a model, or require a provider-specific service.

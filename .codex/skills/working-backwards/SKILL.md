@@ -13,8 +13,9 @@ Use this skill to run the AI-Product-Team Working Backwards pipeline in Codex.
 Before acting, read:
 
 1. `shared/pipeline.json`
-2. `shared/README.md`
-3. Existing session state, if resuming
+2. `shared/runtime-contract.json`
+3. `shared/roles.md`
+4. Existing session state, if resuming
 
 The `.claude/` directory is useful reference material, but Codex behavior should be grounded in `shared/` so both runtimes remain compatible.
 

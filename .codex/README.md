@@ -11,4 +11,6 @@ Codex should use the shared pipeline definition in `../shared/pipeline.json` and
 
 ## Status
 
-This adapter is currently scaffolded. The next implementation step is to move shared methodology, rubrics, templates, and role definitions into `shared/`, then update both Claude and Codex adapters to reference them.
+The shared pipeline, methodology, and Critic rubrics are now the canonical product definition. Both runtime adapters read the same shared rubrics; run `npm run validate` before changing pipeline behavior.
+
+The remaining migration work is to extract the detailed stage-role instructions and output templates into `shared/` without changing the session compatibility contract.

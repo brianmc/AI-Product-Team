@@ -1,7 +1,8 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.0",
   "name": "working-backwards-pipeline",
   "description": "Runtime-neutral Working Backwards pipeline for AI-Product-Team.",
+  "runtime_contract": "runtime-contract.json",
   "max_revisions_per_stage": 3,
   "persistence": {
     "default": "local",
@@ -85,12 +86,20 @@
   ],
   "supported_runtimes": [
     {
+      "id": "codex-cli",
+      "adapter_root": "AGENTS.md"
+    },
+    {
+      "id": "codex-app",
+      "adapter_root": "AGENTS.md"
+    },
+    {
       "id": "claude-code",
       "adapter_root": ".claude"
     },
     {
-      "id": "codex",
-      "adapter_root": ".codex"
+      "id": "claude-cowork",
+      "adapter_root": ".claude-plugin/plugin.json"
     }
   ]
 }

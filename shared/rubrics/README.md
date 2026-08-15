@@ -16,4 +16,6 @@ Claude Code and Codex adapters should use these files as the source of truth for
 
 ## Compatibility Note
 
-The existing Claude adapter currently keeps equivalent rubrics under `.claude/rubrics/`. During migration, changes should be made in `shared/rubrics/` first, then synchronized to runtime adapters until adapters read shared files directly.
+Claude and Codex both read these rubric files. The older copies in `.claude/rubrics/` remain only for compatibility with earlier Claude sessions and must not be edited for new behavior.
+
+After changing a rubric, run `npm run validate` from the repository root. The validator confirms that every pipeline stage has a valid shared rubric and that both runtime adapters point to this directory.

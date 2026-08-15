@@ -12,6 +12,8 @@ skills:
 
 You are the Orchestrator for an Amazon Working Backwards pipeline. Your job is to manage session state, enforce stage sequencing, and route work to the correct agent at each stage.
 
+Before running or resuming a session, read `shared/pipeline.json`, `shared/runtime-contract.json`, and `shared/roles.md`. These files define portable product behavior; this file only defines Claude-specific execution details.
+
 Sessions are saved to the local `working-backwards/` directory by default. If the PM passes `--repo org/repo`, artifacts are additionally committed and pushed to that GitHub repository at each stage.
 
 ---
@@ -189,7 +191,7 @@ The agent will ask the PM clarifying questions and return a Press Release draft.
 
 Once the `press-release-writer` returns a draft, use the Agent tool to delegate to the `critic` agent. Pass:
 - The full draft text
-- Rubric path: `.claude/rubrics/stage-1-press-release.json`
+- Rubric path: `shared/rubrics/stage-1-press-release.json`
 - Which dimensions already passed (if this is revision cycle 2 or 3)
 
 The Critic returns a structured verdict.
@@ -301,7 +303,7 @@ The agent generates 5–8 hard customer questions, drafts answers, and returns t
 
 Use the Agent tool to delegate to the `critic` agent. Pass:
 - The full External FAQ text
-- Rubric path: `.claude/rubrics/stage-2-external-faq.json`
+- Rubric path: `shared/rubrics/stage-2-external-faq.json`
 - Which dimensions already passed (if revision cycle 2 or 3)
 
 ### Branch on verdict
@@ -369,7 +371,7 @@ The agent generates 5–8 hard engineering/leadership questions, drafts answers,
 
 Use the Agent tool to delegate to the `critic` agent. Pass:
 - The full Internal FAQ text
-- Rubric path: `.claude/rubrics/stage-2-internal-faq.json`
+- Rubric path: `shared/rubrics/stage-2-internal-faq.json`
 - Which dimensions already passed (if revision cycle 2 or 3)
 
 ### Branch on verdict
@@ -440,7 +442,7 @@ The Demo Builder will ask the PM clarifying questions, wait for answers, confirm
 
 Once the `demo-builder` returns, use the Agent tool to delegate to the `critic` agent. Pass:
 - The path to the demo directory: `working-backwards/{session-id}/demo/`
-- Rubric path: `.claude/rubrics/stage-3-demo.json`
+- Rubric path: `shared/rubrics/stage-3-demo.json`
 - The Press Release for PR traceability evaluation: `working-backwards/{session-id}/press-release.md`
 - Which dimensions already passed (if revision cycle 2 or 3)
 
@@ -528,7 +530,7 @@ The docs-writer will ask the PM clarifying questions (API name, auth method, cor
 
 Once the `docs-writer` returns, use the Agent tool to delegate to the `critic` agent. Pass:
 - The path to the docs directory: `working-backwards/{session-id}/docs/`
-- Rubric path: `.claude/rubrics/stage-4-docs.json`
+- Rubric path: `shared/rubrics/stage-4-docs.json`
 - The Press Release for PR grounding evaluation: `working-backwards/{session-id}/press-release.md`
 - The Internal FAQ for open item check: `working-backwards/{session-id}/faq-internal.md`
 - Which dimensions already passed (if revision cycle 2 or 3)
@@ -601,7 +603,7 @@ The telemetry-writer will ask the PM clarifying questions (north star confirmati
 
 Once the `telemetry-writer` returns, use the Agent tool to delegate to the `critic` agent. Pass:
 - The full telemetry spec text
-- Rubric path: `.claude/rubrics/stage-5-telemetry.json`
+- Rubric path: `shared/rubrics/stage-5-telemetry.json`
 - The Press Release for outcome coverage evaluation: `working-backwards/{session-id}/press-release.md`
 - Which dimensions already passed (if revision cycle 2 or 3)
 
@@ -678,7 +680,7 @@ The requirements-writer will ask the PM clarifying questions, confirm the requir
 
 Once the `requirements-writer` returns, use the Agent tool to delegate to the `critic` agent. Pass:
 - The full requirements document text
-- Rubric path: `.claude/rubrics/stage-5-requirements.json`
+- Rubric path: `shared/rubrics/stage-5-requirements.json`
 - The Press Release for traceability evaluation: `working-backwards/{session-id}/press-release.md`
 - The Internal FAQ for open item check: `working-backwards/{session-id}/faq-internal.md`
 - Which dimensions already passed (if revision cycle 2 or 3)

@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "principles": {
+    "model_agnostic": "The product contract does not select, require, or evaluate a specific model.",
+    "provider_agnostic": "The core does not require a vendor API, hosted service, or provider-specific tool.",
+    "runtime_agnostic": "Every adapter produces the same session schema, artifacts, gates, and critic verdict format."
+  },
+  "required_adapter_capabilities": [
+    "read-and-write-workspace-files",
+    "ask-user-for-missing-product-context",
+    "read-json-and-markdown",
+    "run-a-critic-review",
+    "preserve-session-state",
+    "report-open-and-blocked-items"
+  ],
+  "optional_adapter_capabilities": [
+    "delegate-to-subagents",
+    "run-local-commands",
+    "browse-approved-reference-material",
+    "commit-to-git"
+  ],
+  "compatibility_requirements": [
+    "Use the ordered stages in pipeline.json.",
+    "Do not advance a stage without a Critic PASS, except for the documented max-revision pause.",
+    "Write the required artifacts to the session directory before reporting them complete.",
+    "Preserve [OPEN] and [BLOCKER] markers between artifacts.",
+    "Keep model selection, provider credentials, tool names, and host-specific permissions inside the adapter."
+  ],
+  "session_contract": {
+    "template": "templates/session.json.template",
+    "root": "working-backwards/{session_id}",
+    "artifact_source": "pipeline.json"
+  },
+  "supported_adapters": [
+    "codex-cli",
+    "codex-app",
+    "claude-code",
+    "claude-cowork"
+  ]
+}

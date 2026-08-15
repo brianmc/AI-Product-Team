@@ -2,6 +2,8 @@
 
 A Claude Code extension that guides product managers through the customer and outcome focused **Working Backwards** methodology, using a multi-agent pipeline.
 
+The product contract is model- and provider-agnostic: the same Working Backwards session can run through Codex CLI, the Codex app, Claude Code, or Claude Cowork. The active host selects its model and tools; the pipeline, artifacts, and Critic gates remain the same. See [runtime support](docs/runtime-support.md).
+
 Instead of jumping straight to requirements, Working Backwards forces you to start from the customer: write the Press Release first, stress-test it with hard questions, build and document the experience, specify how you'll measure success — then, and only then, write the engineering spec. This extension makes that process rigorous, structured, and impossible to shortcut.
 
 ---
@@ -332,7 +334,7 @@ Agents live in `.claude/agents/`. They are invoked by the Orchestrator — you n
 
 ## Critic rubrics
 
-Rubrics live in `.claude/rubrics/` as versioned JSON files. Update a rubric by editing the file and incrementing the `version` field — no agent redeployment needed.
+Rubrics live in `shared/rubrics/` as versioned JSON files. Both Claude Code and Codex consume these files. Update a rubric by editing the file and incrementing the `version` field, then run `npm run validate` to confirm the pipeline contract remains valid.
 
 | File | Stage | Dimensions |
 |---|---|---|

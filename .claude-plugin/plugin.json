@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin-manifest.json",
+  "name": "ai-product-team",
+  "displayName": "AI Product Team",
+  "version": "1.0.0",
+  "description": "A provider-neutral, stage-gated Working Backwards product-development system.",
+  "author": {
+    "name": "brianmc",
+    "url": "https://github.com/brianmc"
+  },
+  "repository": "https://github.com/brianmc/AI-Product-Team",
+  "license": "MIT",
+  "skills": "./.claude/skills/",
+  "agents": [
+    "./.claude/agents/critic.md",
+    "./.claude/agents/demo-builder.md",
+    "./.claude/agents/docs-writer.md",
+    "./.claude/agents/faq-writer.md",
+    "./.claude/agents/press-release-writer.md",
+    "./.claude/agents/requirements-writer.md",
+    "./.claude/agents/site-builder.md",
+    "./.claude/agents/telemetry-writer.md"
+  ]
+}

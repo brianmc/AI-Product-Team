@@ -1,8 +1,8 @@
 # Codex Guide for AI-Product-Team
 
-This repo defines a Working Backwards product pipeline that can run in Claude Code and Codex.
+This repo defines a provider-neutral Working Backwards product pipeline that can run in Codex CLI, the Codex app, Claude Code, and Claude Cowork.
 
-Codex should treat `shared/` as the product source of truth and `.codex/` as the Codex adapter. The existing `.claude/` directory remains the Claude Code adapter.
+Treat `shared/` as the product source of truth. `AGENTS.md`, `.codex/`, `.claude/`, and `.claude-plugin/` are thin runtime adapters. Read `shared/runtime-contract.json` before implementing or changing pipeline behavior.
 
 ## Working Directory
 
@@ -41,6 +41,6 @@ When running the pipeline in Codex:
 
 Codex-specific workflow instructions belong under `.codex/`.
 
-Product behavior, stage definitions, rubrics, templates, and methodology belong under `shared/`.
+Product behavior, stage definitions, rubrics, templates, methodology, and role contracts belong under `shared/`.
 
-If the same behavior is described in both places, prefer `shared/` unless the difference is explicitly about Codex tooling.
+If the same behavior is described in both places, prefer `shared/` unless the difference is explicitly about the host's tooling. Do not pin or require any model or provider in the shared core.
