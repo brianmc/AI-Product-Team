@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "stage": "requirements",
+  "dimensions": [
+    {
+      "id": "requirement-traceability",
+      "name": "Requirement Traceability",
+      "pass_criteria": "Every functional requirement traces to a specific capability, customer need, or constraint established in the Press Release, External FAQ, or Internal FAQ.",
+      "fail_criteria": "One or more requirements cannot be traced to prior artifacts or contradict them."
+    },
+    {
+      "id": "testable-acceptance-criteria",
+      "name": "Testable Acceptance Criteria",
+      "pass_criteria": "Every requirement has at least one acceptance criterion in given/when/then format with an observable outcome.",
+      "fail_criteria": "Requirements lack acceptance criteria, criteria are not in given/when/then format, or criteria are vague or untestable."
+    },
+    {
+      "id": "edge-case-coverage",
+      "name": "Edge Case Coverage",
+      "pass_criteria": "The requirements address failure modes, empty states, boundary conditions, and relevant error scenarios.",
+      "fail_criteria": "The requirements cover only the happy path and omit relevant edge cases."
+    },
+    {
+      "id": "nonfunctional-requirements",
+      "name": "Non-Functional Requirements",
+      "pass_criteria": "Performance, security, scale, and compliance requirements are present or explicitly marked [OPEN - not established in Internal FAQ].",
+      "fail_criteria": "Non-functional requirements are missing or too vague to design against."
+    },
+    {
+      "id": "open-item-propagation",
+      "name": "Open Item Propagation",
+      "pass_criteria": "Every relevant [OPEN] and [BLOCKER] item from the External and Internal FAQs is surfaced explicitly in requirements.",
+      "fail_criteria": "Open or blocker items are absent or silently resolved with invented assumptions."
+    }
+  ]
+}

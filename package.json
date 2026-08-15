@@ -1,0 +1,12 @@
+{
+  "name": "ai-product-team",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Working Backwards pipeline definitions and runtime adapters.",
+  "scripts": {
+    "validate": "node scripts/validate-pipeline.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

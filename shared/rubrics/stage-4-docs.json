@@ -1,0 +1,36 @@
+{
+  "version": "1.1.0",
+  "stage": "docs",
+  "dimensions": [
+    {
+      "id": "audience-journey-completeness",
+      "name": "Audience Journey Completeness",
+      "pass_criteria": "The documentation covers the primary user's complete journey from first access through core use to any required go-live or production steps.",
+      "fail_criteria": "One or more major stages of the user's journey are missing or too thin to be actionable."
+    },
+    {
+      "id": "technical-internal-consistency",
+      "name": "Technical Internal Consistency",
+      "pass_criteria": "Any term, field name, endpoint, setting, or concept that appears in multiple documentation files uses identical naming throughout.",
+      "fail_criteria": "One or more terms, field names, or concepts are named differently across files."
+    },
+    {
+      "id": "format-fit",
+      "name": "Format Fit for Product Type",
+      "pass_criteria": "The documentation format matches the product type: developer portal docs for APIs, task-oriented guides for user apps, setup and operations guides for admin/ops tools.",
+      "fail_criteria": "The documentation format is mismatched to the product or feels like a generic template."
+    },
+    {
+      "id": "product-specificity",
+      "name": "Product Specificity",
+      "pass_criteria": "The documentation is written specifically for this product. Product name, capabilities, persona, and workflows from the Press Release are reflected.",
+      "fail_criteria": "The documentation is generic or could apply to any product of its type."
+    },
+    {
+      "id": "pr-faq-grounding",
+      "name": "Press Release and FAQ Grounding",
+      "pass_criteria": "Every capability documented traces to the Press Release or FAQ. Open items that affect documentation are explicitly marked [TBD - pre-launch].",
+      "fail_criteria": "The docs describe capabilities not established in the PR or FAQ, contradict the PR, or silently resolve Internal FAQ open items."
+    }
+  ]
+}

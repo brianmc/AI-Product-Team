@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "stage": "telemetry",
+  "dimensions": [
+    {
+      "id": "outcome-coverage",
+      "name": "Outcome Coverage",
+      "pass_criteria": "Every success criterion stated or implied in the Press Release has at least one metric that will validate it. The north star metric is clearly defined and linked to the core customer benefit.",
+      "fail_criteria": "One or more Press Release success criteria have no corresponding metric, or the north star metric is absent or generic."
+    },
+    {
+      "id": "adoption-and-non-adoption",
+      "name": "Adoption and Non-Adoption Coverage",
+      "pass_criteria": "The spec addresses both who is using the product and who is not and why. Non-adoption metrics identify specific drop-off points with investigation triggers.",
+      "fail_criteria": "The spec covers adoption but treats non-adoption as a residual with no drop-off points or investigation triggers."
+    },
+    {
+      "id": "time-to-value",
+      "name": "Time-to-Value Measurement",
+      "pass_criteria": "The spec defines a specific, observable activation event derived from the documented user journey, with a concrete event sequence.",
+      "fail_criteria": "The activation event is absent, vague, unmeasurable, or only described conceptually."
+    },
+    {
+      "id": "customer-delight",
+      "name": "Customer Delight Measurement",
+      "pass_criteria": "The spec includes at least one satisfaction signal with a specific trigger condition, plus retention or return-rate definition.",
+      "fail_criteria": "Customer delight is absent or addressed only with a vague placeholder, and retention is not addressed."
+    },
+    {
+      "id": "practical-implementability",
+      "name": "Practical Implementability",
+      "pass_criteria": "Every metric has a concrete measurement mechanism. The spec includes an Instrumentation Requirements section listing events that must be built.",
+      "fail_criteria": "Metrics are aspirational with no implementation path, events are unnamed, or instrumentation requirements are absent."
+    }
+  ]
+}

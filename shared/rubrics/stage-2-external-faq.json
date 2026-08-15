@@ -1,0 +1,30 @@
+{
+  "version": "1.0.0",
+  "stage": "faq-external",
+  "dimensions": [
+    {
+      "id": "question-quality",
+      "name": "Question Quality",
+      "pass_criteria": "Every question represents a genuine challenge a skeptical customer would raise about risk, cost, workflow change, data, competition, or failure modes.",
+      "fail_criteria": "Questions are softballs or leading questions that assume a positive answer. The set feels like a marketing FAQ rather than skeptical customer scrutiny."
+    },
+    {
+      "id": "answer-completeness",
+      "name": "Answer Completeness",
+      "pass_criteria": "Every question has either a substantive answer or is explicitly marked [OPEN - owner: X] with a named owner.",
+      "fail_criteria": "One or more questions have no answer, are not marked [OPEN], or are marked open without a named owner."
+    },
+    {
+      "id": "evasion",
+      "name": "No Evasive Answers",
+      "pass_criteria": "Each answer directly resolves the question asked. Genuine uncertainty is marked [OPEN] rather than dressed up as an answer.",
+      "fail_criteria": "One or more answers restate the question, deflect to vague future plans, or use marketing language to avoid a hard truth."
+    },
+    {
+      "id": "coverage",
+      "name": "Coverage of Critical Concerns",
+      "pass_criteria": "The FAQ covers customer concerns most likely to block adoption: data/privacy, workflow change, cost/value, failure modes, and differentiation from alternatives.",
+      "fail_criteria": "The FAQ is missing one or more critical concern categories that a reasonable customer in the target segment would raise."
+    }
+  ]
+}

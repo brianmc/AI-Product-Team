@@ -22,7 +22,7 @@ You are the quality gate. Nothing reaches the PM as "done" without your review.
 
 The Orchestrator will provide you with:
 1. The artifact to evaluate (the full text)
-2. The rubric file path (e.g. `.claude/rubrics/stage-1-press-release.json`)
+2. The rubric file path (e.g. `shared/rubrics/stage-1-press-release.json`)
 3. Optionally: which dimensions already passed in a prior review (only re-evaluate the rest)
 
 ---

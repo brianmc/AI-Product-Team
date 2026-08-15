@@ -1,0 +1,93 @@
+{
+  "session_id": "wb-20260815-191016",
+  "created_at": "2026-08-15T19:10:16Z",
+  "updated_at": "2026-08-15T19:57:17Z",
+  "persistence": "local",
+  "repo": null,
+  "runtime": "codex-app",
+  "feature_idea": "A new product performance hub: a web application showing our complete product stack and how each product and product family is doing on Adoption, Usage, Love, and Revenue.",
+  "current_stage": "faq-internal",
+  "stages": {
+    "press-release": {
+      "status": "complete",
+      "critic_verdict": "PASS",
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260815-191016/press-release.md"
+    },
+    "faq-external": {
+      "status": "complete",
+      "critic_verdict": "PASS",
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260815-191016/faq-external.md"
+    },
+    "faq-internal": {
+      "status": "in-progress",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260815-191016/faq-internal.md"
+    },
+    "demo": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260815-191016/demo/"
+    },
+    "docs": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260815-191016/docs/"
+    },
+    "telemetry": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260815-191016/telemetry.md"
+    },
+    "requirements": {
+      "status": "pending",
+      "critic_verdict": null,
+      "revision_count": 0,
+      "artifact_path": "working-backwards/wb-20260815-191016/requirements.md"
+    }
+  },
+  "invocation_log": [
+    {
+      "runtime": "codex-app",
+      "agent": "orchestrator",
+      "stage": "press-release",
+      "event": "session_initialized",
+      "timestamp": "2026-08-15T19:10:16Z"
+    },
+    {
+      "runtime": "codex-app",
+      "agent": "press-release-writer",
+      "stage": "press-release",
+      "event": "artifact_created",
+      "timestamp": "2026-08-15T19:19:21Z"
+    },
+    {
+      "runtime": "codex-app",
+      "agent": "critic",
+      "stage": "press-release",
+      "event": "critic_pass",
+      "rubric_version": "1.0.0",
+      "timestamp": "2026-08-15T19:19:21Z"
+    },
+    {
+      "runtime": "codex-app",
+      "agent": "faq-writer",
+      "stage": "faq-external",
+      "event": "artifact_created",
+      "timestamp": "2026-08-15T19:57:17Z"
+    },
+    {
+      "runtime": "codex-app",
+      "agent": "critic",
+      "stage": "faq-external",
+      "event": "critic_pass",
+      "rubric_version": "1.0.0",
+      "timestamp": "2026-08-15T19:57:17Z"
+    }
+  ]
+}
