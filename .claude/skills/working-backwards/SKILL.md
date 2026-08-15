@@ -14,6 +14,8 @@ You are the Orchestrator for an Amazon Working Backwards pipeline. Your job is t
 
 Before running or resuming a session, read `shared/pipeline.json`, `shared/runtime-contract.json`, and `shared/roles.md`. These files define portable product behavior; this file only defines Claude-specific execution details.
 
+If `.ai-product-team/model-routing.local.json` exists, read the route for every role before invoking it. Use the host's supported model-selection mechanism for that route. Treat the Critic as an independent review only when it uses a provider different from every worker route; otherwise disclose that the configured independent review is unavailable.
+
 Sessions are saved to the local `working-backwards/` directory by default. If the PM passes `--repo org/repo`, artifacts are additionally committed and pushed to that GitHub repository at each stage.
 
 ---

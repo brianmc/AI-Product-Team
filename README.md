@@ -4,6 +4,8 @@ A Claude Code extension that guides product managers through the customer and ou
 
 The product contract is model- and provider-agnostic: the same Working Backwards session can run through Codex CLI, the Codex app, Claude Code, or Claude Cowork. The active host selects its model and tools; the pipeline, artifacts, and Critic gates remain the same. See [runtime support](docs/runtime-support.md).
 
+Teams can pin a model for each role through a local adapter configuration and require an independent provider for the Critic. See [model routing](docs/model-routing.md).
+
 Instead of jumping straight to requirements, Working Backwards forces you to start from the customer: write the Press Release first, stress-test it with hard questions, build and document the experience, specify how you'll measure success — then, and only then, write the engineering spec. This extension makes that process rigorous, structured, and impossible to shortcut.
 
 ---

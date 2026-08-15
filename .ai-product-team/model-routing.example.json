@@ -1,0 +1,19 @@
+{
+  "version": "1.0.0",
+  "description": "Copy this file to .ai-product-team/model-routing.local.json and replace every environment-variable reference with a configured value or set the corresponding environment variable.",
+  "routes": {
+    "orchestrator": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_ORCHESTRATOR_MODEL}" },
+    "press-release-writer": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_PRESS_RELEASE_MODEL}" },
+    "faq-writer": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_FAQ_MODEL}" },
+    "demo-builder": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_DEMO_MODEL}" },
+    "docs-writer": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_DOCS_MODEL}" },
+    "telemetry-writer": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_TELEMETRY_MODEL}" },
+    "requirements-writer": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_REQUIREMENTS_MODEL}" },
+    "site-builder": { "provider": "${AIPT_PRIMARY_PROVIDER}", "model": "${AIPT_SITE_BUILDER_MODEL}" },
+    "critic": {
+      "provider": "${AIPT_CRITIC_PROVIDER}",
+      "model": "${AIPT_CRITIC_MODEL}",
+      "independent_review": true
+    }
+  }
+}

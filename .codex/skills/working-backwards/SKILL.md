@@ -19,6 +19,10 @@ Before acting, read:
 
 The `.claude/` directory is useful reference material, but Codex behavior should be grounded in `shared/` so both runtimes remain compatible.
 
+## Model routing
+
+Before invoking a role, read `.ai-product-team/model-routing.local.json` when it exists. Apply its route for that role through the host's supported model-selection mechanism. The Critic route is independent only when its configured provider differs from every worker route; otherwise report that independent review is unavailable and do not label the verdict independent.
+
 ## New Session
 
 1. Parse the feature idea and optional `--repo org/repo` flag.

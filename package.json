@@ -4,7 +4,8 @@
   "version": "0.1.0",
   "description": "Working Backwards pipeline definitions and runtime adapters.",
   "scripts": {
-    "validate": "node scripts/validate-pipeline.mjs"
+    "validate": "node scripts/validate-pipeline.mjs && node scripts/validate-model-routing.mjs",
+    "validate:model-routing": "node scripts/validate-model-routing.mjs"
   },
   "engines": {
     "node": ">=18"
